@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -16,6 +14,7 @@ public:
 	APlayer1();
 	bool IsMoving; // 움직임 상태 추적
 	bool IsJumping; // 점프 상태 추적
+	bool IsDashing; // 대쉬 상태 추적
 
 protected:
 	// Called when the game starts or when spawned
@@ -47,10 +46,8 @@ public:
 	float walkSpeed = 600;
 	// 이동 방향
 	FVector direction;
-	
+
 	void Move(const struct FInputActionValue& inputValue);
-	// 플레이어 이동 처리
-	void PlayerMove();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* inp_Jump;
@@ -62,4 +59,19 @@ public:
 	// 대쉬 입력 이벤트 처리 함수
 	void InputDash(const struct FInputActionValue& inputValue);
 	void ResetDash();  // 선언 추가
+
+	// 착지 이벤트 처리 함수
+	virtual void Landed(const FHitResult& Hit) override;
+
+	// 구르기 처리 함수
+	void PerformRoll(bool bForward);
+
+	UPROPERTY(VisibleAnywhere, Category = Component)
+	class UPlayerBaseComponent* playerMove;
+
+private:
+	FTimerHandle TimerHandle_RollMessage;
+	void DisplayRollMessage(FString Message);
+
+	void UpdateRotation(const FVector& MoveDirection);
 };

@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Player1.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -9,11 +8,12 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "PlayerMove.h"
 
 // Sets default values
 APlayer1::APlayer1()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 1. SkeletalMesh 로드
@@ -40,15 +40,17 @@ APlayer1::APlayer1()
 	tpsCamComp->bUsePawnControlRotation = false;
 
 	bUseControllerRotationYaw = true;
-	// 2단 점프
-	JumpMaxCount = 2;
+	IsDashing = false;
+	IsMoving = false;
+
+	playerMove = CreateDefaultSubobject<UPlayerMove>(TEXT("PlayerMove"));
 }
 
 // Called when the game starts or when spawned
 void APlayer1::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	auto pc = Cast<APlayerController>(Controller);
 	if (pc)
 	{
@@ -64,8 +66,6 @@ void APlayer1::BeginPlay()
 void APlayer1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	PlayerMove();
 }
 
 // Called to bind functionality to input
@@ -76,11 +76,14 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	auto PlayerInput = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 	if (PlayerInput)
 	{
+		// 컴포넌트에서 입력 바인딩 처리하도록 호출
+		playerMove->SetupInputBinding(PlayerInput);
+
 		PlayerInput->BindAction(inp_Look, ETriggerEvent::Triggered, this, &APlayer1::Look);
 		PlayerInput->BindAction(inp_Move, ETriggerEvent::Triggered, this, &APlayer1::Move);
 		PlayerInput->BindAction(inp_Jump, ETriggerEvent::Started, this, &APlayer1::InputJump);
 		PlayerInput->BindAction(inp_Dash, ETriggerEvent::Started, this, &APlayer1::InputDash);
-
+	}
 }
 
 void APlayer1::Look(const FInputActionValue& inputValue)
@@ -93,63 +96,104 @@ void APlayer1::Look(const FInputActionValue& inputValue)
 void APlayer1::Move(const struct FInputActionValue& inputValue)
 {
 	FVector2D value = inputValue.Get<FVector2D>();
-	// 상하 입력 이벤트 처리
+	// 방향키 입력값을 기반으로 방향 설정
 	direction.X = value.X;
-	// 좌우 입력 이벤트 처리
 	direction.Y = value.Y;
+
+	// 방향키가 눌린 상태면 IsMoving을 true로 설정, 아니면 false로 설정
+	IsMoving = !value.IsZero();
+
+	// 플레이어 이동 처리
+	if (IsMoving)
+	{
+		FVector MoveDirection = FTransform(GetControlRotation()).TransformVector(direction);
+		AddMovementInput(MoveDirection);
+		UpdateRotation(MoveDirection); // 이동 방향으로 회전
+	}
 }
 
 void APlayer1::InputJump(const struct FInputActionValue& inputValue)
 {
 	Jump();
+	IsJumping = true;
 }
 
 void APlayer1::InputDash(const struct FInputActionValue& inputValue)
 {
-	if (inputValue.Get<float>() > 0)  // 대쉬 실행 조건 (키 입력 감지)
+	if (inputValue.Get<float>() > 0 && !IsDashing)  // 대쉬 실행 조건 (키 입력 감지)
 	{
-		// 대쉬 거리 및 속도 설정
-		const float AvoidDashSpeed = 1200.0f;  // 속도값 조정
+		IsDashing = true;
+		const float DashSpeed = 1200.0f;  // 속도값 조정
+		FVector DashDirection;
 
-		// 플레이어의 뒤쪽 방향 벡터 계산
-		FVector BackwardDirection = -GetActorForwardVector();
+		if (IsMoving)
+		{
+			// 플레이어가 이동 중인 방향으로 대쉬
+			DashDirection = direction.GetSafeNormal();
+		}
+		else
+		{
+			// 플레이어가 이동 중이 아니면 뒤로 대쉬
+			DashDirection = -GetActorForwardVector();
+		}
 
-		// CharacterMovementComponent를 사용하여 물리적인 대쉬 처리
 		UCharacterMovementComponent* CharMovement = GetCharacterMovement();
 		if (CharMovement)
 		{
 			CharMovement->BrakingFrictionFactor = 0.f;  // 브레이킹 마찰 감소
-			LaunchCharacter(BackwardDirection * AvoidDashSpeed, true, true);  // 대쉬 실행
+			LaunchCharacter(DashDirection * DashSpeed, true, true);  // 대쉬 실행
 			CharMovement->BrakingFrictionFactor = 2.f;  // 원래대로 복구
 
-			// 대쉬가 끝난 후 짧은 딜레이를 설정하여 자연스러운 흐름 유지
 			FTimerHandle UnusedHandle;
-			GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetAvoidDash, 0.5f, false);
+			GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
 		}
 	}
-}
 
-void APlayer1::PlayerMove()
-{
-	// 플레이어 이동 처리
-	// 등속 운동
-	// P = P0 + vt (결과 위치)=(현재 위치)+(속도)*(시간)
-	// 이동 방향 컨트롤 방향 기준으로 변환
-	direction = FTransform(GetControlRotation()).TransformVector(direction);
-	AddMovementInput(direction);
-	//FVector P0 = GetActorLocation();
-	//FVector vt = direction * walkSpeed * DeltaTime;
-	//FVector P = P0 + vt;
-	//SetActorLocation(P);
+	// 대쉬 후에 IsMoving 초기화
+	IsMoving = false;
 	direction = FVector::ZeroVector;
 }
 
 void APlayer1::ResetDash()
 {
+	IsDashing = false;
 	UCharacterMovementComponent* CharMovement = GetCharacterMovement();
 	if (CharMovement)
 	{
 		CharMovement->StopMovementImmediately();  // 즉시 멈추기
 		CharMovement->BrakingFrictionFactor = 2.f;  // 마찰 복구
+	}
+}
+
+void APlayer1::PerformRoll(bool bForward)
+{
+	FString RollType = bForward ? TEXT("ROLL1") : TEXT("ROLL2");
+	DisplayRollMessage(RollType);
+}
+
+void APlayer1::DisplayRollMessage(FString Message)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, Message);
+	}
+}
+
+// 착지 이벤트 처리
+void APlayer1::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	IsJumping = false;
+}
+
+// UpdateRotation 함수 구현
+void APlayer1::UpdateRotation(const FVector& MoveDirection)
+{
+	if (!MoveDirection.IsNearlyZero())
+	{
+		FRotator NewRotation = MoveDirection.Rotation();
+		NewRotation.Pitch = 0.0f; // 피치 값은 유지
+		NewRotation.Roll = 0.0f;  // 롤 값은 유지
+		SetActorRotation(NewRotation);
 	}
 }
