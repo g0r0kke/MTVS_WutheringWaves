@@ -27,4 +27,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void InputSkill(const struct FInputActionValue& inputValue) override;
+	virtual void InputAerialAttack() override;
+	virtual void PerformStrongAttack() override;
+	virtual void PerformFirstAttack() override;
+	virtual void PerformSecondAttack() override;
+	virtual void PerformThirdAttack() override;
+	virtual void PerformFourthAttack() override;
 };

@@ -58,16 +58,16 @@ public:
 	class UInputAction* inp_Skill;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* inp_SwitchTo1; // !!변경된 코드!! 캐릭터 슬롯 1번으로 전환
+	class UInputAction* inp_SwitchTo1; // 캐릭터 슬롯 1번으로 전환
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* inp_SwitchTo2; // !!변경된 코드!! 캐릭터 슬롯 2번으로 전환
+	class UInputAction* inp_SwitchTo2; // 캐릭터 슬롯 2번으로 전환
 
 	// 입력 이벤트 처리 함수
 	void Look(const struct FInputActionValue& inputValue);
 	void Move(const struct FInputActionValue& inputValue);
 	void InputJump(const struct FInputActionValue& inputValue);
 	void InputDash(const struct FInputActionValue& inputValue);
-	void InputSkill(const struct FInputActionValue& inputValue);
+	//void InputSkill(const struct FInputActionValue& inputValue);
 
 	void ResetDash();
 
@@ -77,10 +77,7 @@ public:
 	// 구르기 처리 함수
 	void PerformRoll(bool bForward);
 
-	UPROPERTY(VisibleAnywhere, Category = Component)
-	class UPlayerBaseComponent* playerMove;
-
-private:
+protected:
 	FTimerHandle TimerHandle_RollMessage;
 	FTimerHandle AttackDisableTimer; // 공격 비활성화 타이머
 	bool bCanAttack; // 공격 가능 여부
@@ -93,7 +90,7 @@ private:
 
 	void InputAttackStart(const FInputActionValue& inputValue);
 	void InputAttackStop(const FInputActionValue& inputValue);
-	void InputAerialAttack();
+	//void InputAerialAttack();
 	void EnableAttack(); // 공격 활성화 함수
 
 	// 공격 단계 관리
@@ -102,22 +99,33 @@ private:
 	FTimerHandle StrongAttackTimer;
 	bool bIsStrongAttack;
 	void ResetCombo();
-	void PerformStrongAttack();
+	//void PerformStrongAttack();
 
-	void PerformFirstAttack();
-	void PerformSecondAttack();
-	void PerformThirdAttack();
-	void PerformFourthAttack();
+	//void PerformFirstAttack();
+	//void PerformSecondAttack();
+	//void PerformThirdAttack();
+	//void PerformFourthAttack();
 
 	void PerformDash(const FVector& DashDirection, float DashSpeed);
 
-	// !!변경된 코드!! 캐릭터 전환 함수
+	// 캐릭터 전환 함수
 	void SwitchToCharacter(int32 CharacterIndex);
 
-	// !!변경된 코드!! 캐릭터 블루프린트 클래스 참조
-	UPROPERTY(EditDefaultsOnly, Category = "Characters")
-	TSubclassOf<APawn> BP_Player1;
+	virtual void InputSkill(const struct FInputActionValue& inputValue);
+	virtual void InputAerialAttack();
+	virtual void PerformStrongAttack();
+	virtual void PerformFirstAttack();
+	virtual void PerformSecondAttack();
+	virtual void PerformThirdAttack();
+	virtual void PerformFourthAttack();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Characters")
-	TSubclassOf<APawn> BP_Player2;
+private:
+	// 캐릭터 블루프린트 클래스 참조
+    UPROPERTY(EditDefaultsOnly, Category = "Characters")
+    TSubclassOf<APawn> BP_Player1;
+    UPROPERTY(EditDefaultsOnly, Category = "Characters")
+    TSubclassOf<APawn> BP_Player2;
+
+    APawn* Player1Instance;
+    APawn* Player2Instance;
 };

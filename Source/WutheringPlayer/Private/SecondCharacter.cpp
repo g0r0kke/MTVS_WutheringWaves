@@ -32,3 +32,46 @@ void ASecondCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+void ASecondCharacter::InputSkill(const struct FInputActionValue& inputValue)
+{
+	Super::DisplayMessage("P2 Skill Attack!");
+	Super::PerformDash(GetActorForwardVector(), 1200.0f);
+}
+
+void ASecondCharacter::InputAerialAttack()
+{
+	Super::DisplayMessage("P2 Aerial Attack!");
+	Super::bAerialAttack = true; // 공중 공격 상태 설정
+	const float FastFallSpeed = -1200.0f; // 빠른 낙하 속도 조정
+	Super::LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // 빠르게 낙하
+}
+
+void ASecondCharacter::PerformStrongAttack()
+{
+	Super::bIsStrongAttack = true;
+	Super::DisplayMessage("P2 Strong Attack!");
+}
+
+void ASecondCharacter::PerformFirstAttack()
+{
+	Super::DisplayMessage("P2 First Attack!");
+	Super::PerformDash(GetActorForwardVector(), 1100.0f);
+}
+
+void ASecondCharacter::PerformSecondAttack()
+{
+	Super::DisplayMessage("P2 Second Attack!");
+	Super::PerformDash(GetActorForwardVector(), 1200.0f);
+}
+
+void ASecondCharacter::PerformThirdAttack()
+{
+	Super::DisplayMessage("P2 Third Attack!");
+	Super::PerformDash(GetActorForwardVector(), 1300.0f);
+}
+
+void ASecondCharacter::PerformFourthAttack()
+{
+	Super::DisplayMessage("P2 Fourth Attack!");
+	Super::PerformDash(GetActorForwardVector(), 1400.0f);
+}
