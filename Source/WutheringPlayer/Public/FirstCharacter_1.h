@@ -34,4 +34,8 @@ public:
 	virtual void PerformSecondAttack() override;
 	virtual void PerformThirdAttack() override;
 	virtual void PerformFourthAttack() override;
+
+	// ¹«±â ½ºÄÌ·¹Å»¸Þ½Ã
+	UPROPERTY(VisibleAnywhere, Category=WeaponMesh)
+	class USkeletalMeshComponent* weaponMeshComp;
 };
