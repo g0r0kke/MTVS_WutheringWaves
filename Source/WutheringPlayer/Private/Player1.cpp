@@ -15,7 +15,7 @@ APlayer1::APlayer1()
     PrimaryActorTick.bCanEverTick = true;
 
     // 1. SkeletalMesh 로드
-    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/KHJ/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'"));
+    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__1_.Big_Rib_Hit__1_'"));
 
     // 만약 로드가 성공했다면
     if (TempMesh.Succeeded()) {
