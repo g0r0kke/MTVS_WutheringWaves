@@ -14,7 +14,7 @@ AFirstCharacter_1::AFirstCharacter_1()
 	// 부모 컴포넌트를 Mesh 컴포넌트로 설정
 	weaponMeshComp->SetupAttachment(GetMesh());
 	// 스켈레탈메시 데이터 로드
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempWeaponMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempWeaponMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
 	// 데이터 로드가 성공했다면
 	if (TempWeaponMesh.Succeeded())
 	{
