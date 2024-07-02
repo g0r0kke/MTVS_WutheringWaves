@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "WutheringPlayer",
+			"Path": "..\\Source\\WutheringPlayer.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "WutheringPlayerEditor",
+			"Path": "..\\Source\\WutheringPlayerEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
