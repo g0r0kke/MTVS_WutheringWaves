@@ -30,7 +30,7 @@ APlayer1Weapon::APlayer1Weapon()
 		weaponMeshComp->SetSkeletalMesh(TempWeaponMesh.Object);
 		// 위치 조정하기
 		weaponMeshComp->SetRelativeLocation(FVector(0, 0, 0));
-		weaponMeshComp->SetWorldRotation(FRotator(0.0f, 90.0f, 90.0f));
+		weaponMeshComp->SetRelativeRotation(FRotator(0.0f, 90.0f, 90.0f));
 	}
 }
 

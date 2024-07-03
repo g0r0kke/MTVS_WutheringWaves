@@ -64,7 +64,10 @@ public:
 
 	// 입력 이벤트 처리 함수
 	void Look(const struct FInputActionValue& inputValue);
+
+	// 이동 함수 선언
 	void Move(const struct FInputActionValue& inputValue);
+
 	void InputJump(const struct FInputActionValue& inputValue);
 	void InputDash(const struct FInputActionValue& inputValue);
 	//void InputSkill(const struct FInputActionValue& inputValue);
@@ -128,4 +131,6 @@ private:
 
     APawn* Player1Instance;
     APawn* Player2Instance;
+
+	APawn* CurrentPlayerInstance; // 현재 활성화된 플레이어 인스턴스
 };

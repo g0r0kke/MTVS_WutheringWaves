@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/Engine.h"
+#include "GameFramework/GameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayer1::APlayer1()
@@ -15,7 +17,7 @@ APlayer1::APlayer1()
     PrimaryActorTick.bCanEverTick = true;
 
     // 1. SkeletalMesh 로드
-    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__1_.Big_Rib_Hit__1_'"));
+    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__.Big_Rib_Hit__'"));
 
     // 만약 로드가 성공했다면
     if (TempMesh.Succeeded()) {
@@ -48,17 +50,31 @@ APlayer1::APlayer1()
     bIsStrongAttack = false; // 강한 공격 초기화
 
     // 캐릭터 블루프린트 클래스 로드
-    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P1.BP_P1_C'"));
+    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Game/KHJ/Blueprints/BP_P1.BP_P1_C"));
     if (Player1BP.Succeeded())
     {
         BP_Player1 = Player1BP.Class;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player1 loaded successfully"));
+    }
+    else
+    {
+        BP_Player1 = nullptr;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player1"));
     }
 
-    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P2.BP_P2_C'"));
+    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Game/KHJ/Blueprints/BP_P2.BP_P2_C"));
     if (Player2BP.Succeeded())
     {
         BP_Player2 = Player2BP.Class;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player2 loaded successfully"));
     }
+    else
+    {
+        BP_Player2 = nullptr;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player2"));
+    }
+
+    CurrentPlayerInstance = this; // 현재 플레이어 인스턴스 초기화
 }
 
 // Called when the game starts or when spawned
@@ -386,30 +402,34 @@ void APlayer1::SwitchToCharacter(int32 CharacterIndex)
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Switching to Player 2"));
         }
 
-        if (NewCharacterClass)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("NewCharacterClass is valid"));
-        }
-        else
+        if (!NewCharacterClass)
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("NewCharacterClass is invalid"));
             return;
         }
 
-        if (GetClass() == NewCharacterClass)
+        if (CurrentPlayerInstance && CurrentPlayerInstance->GetClass() == NewCharacterClass)
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("NewCharacterClass is the same as the current class"));
             return;
         }
 
-        FTransform SpawnTransform = GetActorTransform();
-        APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
+        FVector SpawnLocation = GetActorLocation() + FVector(100, -100, 0);
+        FRotator SpawnRotation = GetActorRotation();
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this;
+        APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
         if (NewCharacter)
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Spawned new character successfully"));
             pc->UnPossess();
             pc->Possess(NewCharacter);
-            Destroy(); // 기존 캐릭터 제거
+            CurrentPlayerInstance = NewCharacter;
+
+            // 기존 캐릭터 비활성화
+            SetActorHiddenInGame(true);
+            SetActorEnableCollision(false);
+            SetActorTickEnabled(false);
         }
         else
         {
