@@ -16,7 +16,7 @@ public:
 	APlayer1Weapon();
 
 	// ¹«±â ½ºÄÌ·¹Å»¸Þ½Ã
-	UPROPERTY(VisibleAnywhere, Category=WeaponMesh)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
 	class USkeletalMeshComponent* weaponMeshComp;
 
 protected:
@@ -27,4 +27,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	// ±âº» ¾À ·çÆ® ÄÄÆ÷³ÍÆ®
+	UPROPERTY()
+	class USceneComponent* SceneComponent;
 };
