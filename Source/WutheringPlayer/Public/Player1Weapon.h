@@ -18,6 +18,9 @@ public:
 	// ¹«±â ½ºÄÌ·¹Å»¸Þ½Ã
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
 	class USkeletalMeshComponent* weaponMeshComp;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* BoxComp;
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +31,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	// ±âº» ¾À ·çÆ® ÄÄÆ÷³ÍÆ®
-	UPROPERTY()
-	class USceneComponent* SceneComponent;
+	//// ±âº» ¾À ·çÆ® ÄÄÆ÷³ÍÆ®
+	//UPROPERTY()
+	//class USceneComponent* SceneComponent;
 };
