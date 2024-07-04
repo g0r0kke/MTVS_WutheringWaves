@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/Engine.h"
+//#include "GameFramework/GameModeBase.h"
+//#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayer1::APlayer1()
@@ -15,7 +17,7 @@ APlayer1::APlayer1()
     PrimaryActorTick.bCanEverTick = true;
 
     // 1. SkeletalMesh 로드
-    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__1_.Big_Rib_Hit__1_'"));
+    ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__.Big_Rib_Hit__'"));
 
     // 만약 로드가 성공했다면
     if (TempMesh.Succeeded()) {
@@ -47,18 +49,32 @@ APlayer1::APlayer1()
     AttackStage = 0; // 공격 단계 초기화
     bIsStrongAttack = false; // 강한 공격 초기화
 
-    // 캐릭터 블루프린트 클래스 로드
-    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P1.BP_P1_C'"));
-    if (Player1BP.Succeeded())
-    {
-        BP_Player1 = Player1BP.Class;
-    }
-
-    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P2.BP_P2_C'"));
-    if (Player2BP.Succeeded())
-    {
-        BP_Player2 = Player2BP.Class;
-    }
+//    // 캐릭터 블루프린트 클래스 로드
+//    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Game/KHJ/Blueprints/BP_P1.BP_P1_C"));
+//    if (Player1BP.Succeeded())
+//    {
+//        BP_Player1 = Player1BP.Class;
+//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player1 loaded successfully"));
+//    }
+//    else
+//    {
+//        BP_Player1 = nullptr;
+//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player1"));
+//    }
+//
+//    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Game/KHJ/Blueprints/BP_P2.BP_P2_C"));
+//    if (Player2BP.Succeeded())
+//    {
+//        BP_Player2 = Player2BP.Class;
+//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player2 loaded successfully"));
+//    }
+//    else
+//    {
+//        BP_Player2 = nullptr;
+//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player2"));
+//    }
+//
+//    CurrentPlayerInstance = this; // 현재 플레이어 인스턴스 초기화
 }
 
 // Called when the game starts or when spawned
@@ -100,9 +116,9 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
         PlayerInput->BindAction(inp_Attack, ETriggerEvent::Completed, this, &APlayer1::InputAttackStop);
         PlayerInput->BindAction(inp_Skill, ETriggerEvent::Started, this, &APlayer1::InputSkill);
 
-        // 캐릭터 전환 바인딩
-        PlayerInput->BindAction(inp_SwitchTo1, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 1);
-        PlayerInput->BindAction(inp_SwitchTo2, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 2);
+        //// 캐릭터 전환 바인딩
+        //PlayerInput->BindAction(inp_SwitchTo1, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 1);
+        //PlayerInput->BindAction(inp_SwitchTo2, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 2);
     }
 }
 
@@ -235,6 +251,7 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 {
     if (!bCanAttack) return; // 공격이 비활성화된 경우 반환
     bIsStrongAttack = false;
+    bIsAttackHeld = true;  // 공격 버튼이 눌린 상태 설정
 
     if (IsJumping)
     {
@@ -244,10 +261,14 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 
     // 1.5초 후에 강한 공격 트리거
     GetWorldTimerManager().SetTimer(StrongAttackTimer, this, &APlayer1::PerformStrongAttack, 1.5f, false);
+
 }
 
 void APlayer1::InputAttackStop(const struct FInputActionValue& inputValue)
 {
+    if (!bIsAttackHeld) return; // 공격 버튼이 눌리지 않은 경우 반환
+    bIsAttackHeld = false;  // 공격 버튼이 눌리지 않은 상태 설정
+
     if (!bCanAttack || bIsStrongAttack || IsJumping)
     {
         // 강한 공격 또는 공중 공격이면 콤보 공격을 실행하지 않음
@@ -261,19 +282,24 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& inputValue)
     {
     case 0:
         PerformFirstAttack();
+        Attack1Start();
         break;
     case 1:
         PerformSecondAttack();
+        Attack2Start();
         break;
     case 2:
         PerformThirdAttack();
+        Attack3Start();
         break;
     case 3:
         PerformFourthAttack();
+        Attack4Start();
         break;
     default:
         ResetCombo();
         PerformFirstAttack();
+        Attack1Start();
         break;
     }
 
@@ -295,8 +321,12 @@ void APlayer1::InputAerialAttack()
 
 void APlayer1::PerformStrongAttack()
 {
-    bIsStrongAttack = true;
-    DisplayMessage("Strong Attack!");
+    if (bIsAttackHeld) // 공격 버튼이 눌린 상태에서만 강한 공격 실행
+    {
+        bIsStrongAttack = true;
+        DisplayMessage("Strong Attack!");
+        &APlayer1::StrongAttackStart;
+    }
 }
 
 void APlayer1::ResetCombo()
@@ -307,31 +337,31 @@ void APlayer1::ResetCombo()
 void APlayer1::InputSkill(const struct FInputActionValue& inputValue)
 {
     DisplayMessage("Skill Attack!");
-    PerformDash(GetActorForwardVector(), 1200.0f);
+    //PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void APlayer1::PerformFirstAttack()
 {
     DisplayMessage("First Attack!");
-    PerformDash(GetActorForwardVector(), 1100.0f);
+    //PerformDash(GetActorForwardVector(), 1100.0f);
 }
 
 void APlayer1::PerformSecondAttack()
 {
     DisplayMessage("Second Attack!");
-    PerformDash(GetActorForwardVector(), 1200.0f);
+    //PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void APlayer1::PerformThirdAttack()
 {
     DisplayMessage("Third Attack!");
-    PerformDash(GetActorForwardVector(), 1300.0f);
+    //PerformDash(GetActorForwardVector(), 1300.0f);
 }
 
 void APlayer1::PerformFourthAttack()
 {
     DisplayMessage("Fourth Attack!");
-    PerformDash(GetActorForwardVector(), 1400.0f);
+    //PerformDash(GetActorForwardVector(), 1400.0f);
 }
 
 void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
@@ -369,51 +399,55 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
 //    }
 //}
 
-void APlayer1::SwitchToCharacter(int32 CharacterIndex)
-{
-    auto pc = Cast<APlayerController>(Controller);
-    if (pc)
-    {
-        TSubclassOf<APawn> NewCharacterClass = nullptr;
-        if (CharacterIndex == 1)
-        {
-            NewCharacterClass = BP_Player1;
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Switching to Player 1"));
-        }
-        else if (CharacterIndex == 2)
-        {
-            NewCharacterClass = BP_Player2;
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Switching to Player 2"));
-        }
-
-        if (NewCharacterClass)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("NewCharacterClass is valid"));
-        }
-        else
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("NewCharacterClass is invalid"));
-            return;
-        }
-
-        if (GetClass() == NewCharacterClass)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("NewCharacterClass is the same as the current class"));
-            return;
-        }
-
-        FTransform SpawnTransform = GetActorTransform();
-        APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
-        if (NewCharacter)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Spawned new character successfully"));
-            pc->UnPossess();
-            pc->Possess(NewCharacter);
-            Destroy(); // 기존 캐릭터 제거
-        }
-        else
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to spawn new character"));
-        }
-    }
-}
+//void APlayer1::SwitchToCharacter(int32 CharacterIndex)
+//{
+//    auto pc = Cast<APlayerController>(Controller);
+//    if (pc)
+//    {
+//        TSubclassOf<APawn> NewCharacterClass = nullptr;
+//        if (CharacterIndex == 1)
+//        {
+//            NewCharacterClass = BP_Player1;
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Switching to Player 1"));
+//        }
+//        else if (CharacterIndex == 2)
+//        {
+//            NewCharacterClass = BP_Player2;
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Switching to Player 2"));
+//        }
+//
+//        if (!NewCharacterClass)
+//        {
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("NewCharacterClass is invalid"));
+//            return;
+//        }
+//
+//        if (CurrentPlayerInstance && CurrentPlayerInstance->GetClass() == NewCharacterClass)
+//        {
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("NewCharacterClass is the same as the current class"));
+//            return;
+//        }
+//
+//        FVector SpawnLocation = GetActorLocation() + FVector(100, -100, 0);
+//        FRotator SpawnRotation = GetActorRotation();
+//        FActorSpawnParameters SpawnParams;
+//        SpawnParams.Owner = this;
+//        APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
+//        if (NewCharacter)
+//        {
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Spawned new character successfully"));
+//            pc->UnPossess();
+//            pc->Possess(NewCharacter);
+//            CurrentPlayerInstance = NewCharacter;
+//
+//            // 기존 캐릭터 비활성화
+//            SetActorHiddenInGame(true);
+//            SetActorEnableCollision(false);
+//            SetActorTickEnabled(false);
+//        }
+//        else
+//        {
+//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to spawn new character"));
+//        }
+//    }
+//}
