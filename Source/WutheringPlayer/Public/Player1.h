@@ -57,14 +57,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* inp_Skill;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* inp_SwitchTo1; // 캐릭터 슬롯 1번으로 전환
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* inp_SwitchTo2; // 캐릭터 슬롯 2번으로 전환
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//class UInputAction* inp_SwitchTo1; // 캐릭터 슬롯 1번으로 전환
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//class UInputAction* inp_SwitchTo2; // 캐릭터 슬롯 2번으로 전환
 
 	// 입력 이벤트 처리 함수
 	void Look(const struct FInputActionValue& inputValue);
+
+	// 이동 함수 선언
 	void Move(const struct FInputActionValue& inputValue);
+
 	void InputJump(const struct FInputActionValue& inputValue);
 	void InputDash(const struct FInputActionValue& inputValue);
 	//void InputSkill(const struct FInputActionValue& inputValue);
@@ -98,6 +101,7 @@ protected:
 	FTimerHandle AttackComboTimer;
 	FTimerHandle StrongAttackTimer;
 	bool bIsStrongAttack;
+	bool bIsAttackHeld;  // 공격 버튼이 눌린 상태인지 확인하는 변수
 	void ResetCombo();
 	//void PerformStrongAttack();
 
@@ -108,8 +112,8 @@ protected:
 
 	void PerformDash(const FVector& DashDirection, float DashSpeed);
 
-	// 캐릭터 전환 함수
-	void SwitchToCharacter(int32 CharacterIndex);
+	//// 캐릭터 전환 함수
+	//void SwitchToCharacter(int32 CharacterIndex);
 
 	virtual void InputSkill(const struct FInputActionValue& inputValue);
 	virtual void InputAerialAttack();
@@ -119,13 +123,26 @@ protected:
 	virtual void PerformThirdAttack();
 	virtual void PerformFourthAttack();
 
-private:
-	// 캐릭터 블루프린트 클래스 참조
-    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-    TSubclassOf<APawn> BP_Player1;
-    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-    TSubclassOf<APawn> BP_Player2;
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void Attack1Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void Attack2Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void Attack3Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void Attack4Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void StrongAttackStart();
 
-    APawn* Player1Instance;
-    APawn* Player2Instance;
+//private:
+//	// 캐릭터 블루프린트 클래스 참조
+//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
+//    TSubclassOf<APawn> BP_Player1;
+//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
+//    TSubclassOf<APawn> BP_Player2;
+//
+//    APawn* Player1Instance;
+//    APawn* Player2Instance;
+//
+//	APawn* CurrentPlayerInstance; // 현재 활성화된 플레이어 인스턴스
 };
