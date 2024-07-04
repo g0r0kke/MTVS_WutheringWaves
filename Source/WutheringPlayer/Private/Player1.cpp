@@ -145,7 +145,7 @@ void APlayer1::Move(const struct FInputActionValue& inputValue)
         FVector MoveDirection = FTransform(GetControlRotation()).TransformVector(direction);
         AddMovementInput(MoveDirection);
         UpdateRotation(MoveDirection);  // 이동 방향으로 회전
-    }
+     }
 }
 
 void APlayer1::InputJump(const struct FInputActionValue& inputValue)
@@ -251,7 +251,6 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 {
     if (!bCanAttack) return; // 공격이 비활성화된 경우 반환
     bIsStrongAttack = false;
-    bIsAttackHeld = true;  // 공격 버튼이 눌린 상태 설정
 
     if (IsJumping)
     {
@@ -266,9 +265,6 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 
 void APlayer1::InputAttackStop(const struct FInputActionValue& inputValue)
 {
-    if (!bIsAttackHeld) return; // 공격 버튼이 눌리지 않은 경우 반환
-    bIsAttackHeld = false;  // 공격 버튼이 눌리지 않은 상태 설정
-
     if (!bCanAttack || bIsStrongAttack || IsJumping)
     {
         // 강한 공격 또는 공중 공격이면 콤보 공격을 실행하지 않음
@@ -325,7 +321,6 @@ void APlayer1::PerformStrongAttack()
     {
         bIsStrongAttack = true;
         DisplayMessage("Strong Attack!");
-        &APlayer1::StrongAttackStart;
     }
 }
 
