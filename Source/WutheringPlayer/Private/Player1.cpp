@@ -49,32 +49,32 @@ APlayer1::APlayer1()
     AttackStage = 0; // 공격 단계 초기화
     bIsStrongAttack = false; // 강한 공격 초기화
 
-//    // 캐릭터 블루프린트 클래스 로드
-//    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Game/KHJ/Blueprints/BP_P1.BP_P1_C"));
-//    if (Player1BP.Succeeded())
-//    {
-//        BP_Player1 = Player1BP.Class;
-//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player1 loaded successfully"));
-//    }
-//    else
-//    {
-//        BP_Player1 = nullptr;
-//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player1"));
-//    }
-//
-//    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Game/KHJ/Blueprints/BP_P2.BP_P2_C"));
-//    if (Player2BP.Succeeded())
-//    {
-//        BP_Player2 = Player2BP.Class;
-//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player2 loaded successfully"));
-//    }
-//    else
-//    {
-//        BP_Player2 = nullptr;
-//        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player2"));
-//    }
-//
-//    CurrentPlayerInstance = this; // 현재 플레이어 인스턴스 초기화
+    //    // 캐릭터 블루프린트 클래스 로드
+    //    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Game/KHJ/Blueprints/BP_P1.BP_P1_C"));
+    //    if (Player1BP.Succeeded())
+    //    {
+    //        BP_Player1 = Player1BP.Class;
+    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player1 loaded successfully"));
+    //    }
+    //    else
+    //    {
+    //        BP_Player1 = nullptr;
+    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player1"));
+    //    }
+    //
+    //    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Game/KHJ/Blueprints/BP_P2.BP_P2_C"));
+    //    if (Player2BP.Succeeded())
+    //    {
+    //        BP_Player2 = Player2BP.Class;
+    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player2 loaded successfully"));
+    //    }
+    //    else
+    //    {
+    //        BP_Player2 = nullptr;
+    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player2"));
+    //    }
+    //
+    //    CurrentPlayerInstance = this; // 현재 플레이어 인스턴스 초기화
 }
 
 // Called when the game starts or when spawned
@@ -251,7 +251,6 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 {
     if (!bCanAttack) return; // 공격이 비활성화된 경우 반환
     bIsStrongAttack = false;
-    bIsAttackHeld = true;  // 공격 버튼이 눌린 상태 설정
 
     if (IsJumping)
     {
@@ -266,9 +265,6 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 
 void APlayer1::InputAttackStop(const struct FInputActionValue& inputValue)
 {
-    if (!bIsAttackHeld) return; // 공격 버튼이 눌리지 않은 경우 반환
-    bIsAttackHeld = false;  // 공격 버튼이 눌리지 않은 상태 설정
-
     if (!bCanAttack || bIsStrongAttack || IsJumping)
     {
         // 강한 공격 또는 공중 공격이면 콤보 공격을 실행하지 않음
@@ -325,7 +321,6 @@ void APlayer1::PerformStrongAttack()
     {
         bIsStrongAttack = true;
         DisplayMessage("Strong Attack!");
-        &APlayer1::StrongAttackStart;
     }
 }
 
