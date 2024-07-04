@@ -35,13 +35,6 @@ public:
 	virtual void PerformThirdAttack() override;
 	virtual void PerformFourthAttack() override;
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
-	void SkillStart();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
-	void AerialAttackStart();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
-	void StrongAttackStart();
-
 	//// ¹«±â ½ºÄÌ·¹Å»¸Þ½Ã
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
 	//class USkeletalMeshComponent* weaponMeshComp;

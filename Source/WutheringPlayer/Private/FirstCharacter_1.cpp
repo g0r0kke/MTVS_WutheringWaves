@@ -54,15 +54,13 @@ void AFirstCharacter_1::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 {
 	Super::DisplayMessage("P1 Skill Attack!");
-	SkillStart();
-	Super::PerformDash(GetActorForwardVector(), 2000.0f);
+	Super::PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void AFirstCharacter_1::InputAerialAttack()
 {
 	Super::DisplayMessage("P1 Aerial Attack!");
 	Super::bAerialAttack = true; // 공중 공격 상태 설정
-	AerialAttackStart();
 	const float FastFallSpeed = -1200.0f; // 빠른 낙하 속도 조정
 	Super::LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // 빠르게 낙하
 }
@@ -71,29 +69,28 @@ void AFirstCharacter_1::PerformStrongAttack()
 {
 	Super::bIsStrongAttack = true;
 	Super::DisplayMessage("P1 Strong Attack!");
-	StrongAttackStart();
 }
 
 void AFirstCharacter_1::PerformFirstAttack()
 {
 	Super::DisplayMessage("P1 First Attack!");
-	//Super::PerformDash(GetActorForwardVector(), 1100.0f);
+	Super::PerformDash(GetActorForwardVector(), 1100.0f);
 }
 
 void AFirstCharacter_1::PerformSecondAttack()
 {
 	Super::DisplayMessage("P1 Second Attack!");
-	//Super::PerformDash(GetActorForwardVector(), 1200.0f);
+	Super::PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void AFirstCharacter_1::PerformThirdAttack()
 {
 	Super::DisplayMessage("P1 Third Attack!");
-	//Super::PerformDash(GetActorForwardVector(), 1300.0f);
+	Super::PerformDash(GetActorForwardVector(), 1300.0f);
 }
 
 void AFirstCharacter_1::PerformFourthAttack()
 {
 	Super::DisplayMessage("P1 Fourth Attack!");
-	//Super::PerformDash(GetActorForwardVector(), 1400.0f);
+	Super::PerformDash(GetActorForwardVector(), 1400.0f);
 }

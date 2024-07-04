@@ -123,14 +123,16 @@ protected:
 	virtual void PerformThirdAttack();
 	virtual void PerformFourthAttack();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void Attack1Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void Attack2Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void Attack3Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void Attack4Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void StrongAttackStart();
 
 //private:
 //	// 캐릭터 블루프린트 클래스 참조
