@@ -16,30 +16,30 @@ APlayer1::APlayer1()
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
-    // ÃÊ±â Ã¼·Â ¼³Á¤
+    // ì´ˆê¸° ì²´ë ¥ ì„¤ì •
     Health = 100;
     bIsAlive = true;
 
-    // 1. SkeletalMesh ·Îµå
+    // 1. SkeletalMesh ë¡œë“œ
     ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__.Big_Rib_Hit__'"));
 
-    // ¸¸¾à ·Îµå°¡ ¼º°øÇß´Ù¸é
+    // ë§Œì•½ ë¡œë“œê°€ ì„±ê³µí–ˆë‹¤ë©´
     if (TempMesh.Succeeded()) {
-        // MeshFinder¿¡ ·ÎµåÇÑ SkeletalMesh ¼³Á¤
+        // MeshFinderì— ë¡œë“œí•œ SkeletalMesh ì„¤ì •
         GetMesh()->SetSkeletalMesh(TempMesh.Object);
-        // 2. Mesh ÄÄÆ÷³ÍÆ® À§Ä¡, È¸Àü°ª ¼³Á¤
+        // 2. Mesh ì»´í¬ë„ŒíŠ¸ ìœ„ì¹˜, íšŒì „ê°’ ì„¤ì •
         GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
     }
 
-    // TPS Ä«¸Ş¶ó ºÙÀÌ±â
-    // 3-1. SpringArm ÄÄÆ÷³ÍÆ® ºÙÀÌ±â
+    // TPS ì¹´ë©”ë¼ ë¶™ì´ê¸°
+    // 3-1. SpringArm ì»´í¬ë„ŒíŠ¸ ë¶™ì´ê¸°
     springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
     springArmComp->SetupAttachment(RootComponent);
     springArmComp->SetRelativeLocation(FVector(0, 70, 90));
     springArmComp->TargetArmLength = 400;
     springArmComp->bUsePawnControlRotation = true;
 
-    // 3-2. Ä«¸Ş¶ó ÄÄÆ÷³ÍÆ® ºÙÀÌ±â
+    // 3-2. ì¹´ë©”ë¼ ì»´í¬ë„ŒíŠ¸ ë¶™ì´ê¸°
     tpsCamComp = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsCamComp"));
     tpsCamComp->SetupAttachment(springArmComp);
     tpsCamComp->bUsePawnControlRotation = false;
@@ -47,11 +47,11 @@ APlayer1::APlayer1()
     bUseControllerRotationYaw = true;
     IsDashing = false;
     IsMoving = false;
-    bCanAttack = true; // °ø°İ °¡´É ÃÊ±âÈ­
-    bAerialAttack = false; // °øÁß °ø°İ ÃÊ±âÈ­
+    bCanAttack = true; // ê³µê²© ê°€ëŠ¥ ì´ˆê¸°í™”
+    bAerialAttack = false; // ê³µì¤‘ ê³µê²© ì´ˆê¸°í™”
 
-    AttackStage = 0; // °ø°İ ´Ü°è ÃÊ±âÈ­
-    bIsStrongAttack = false; // °­ÇÑ °ø°İ ÃÊ±âÈ­
+    AttackStage = 0; // ê³µê²© ë‹¨ê³„ ì´ˆê¸°í™”
+    bIsStrongAttack = false; // ê°•í•œ ê³µê²© ì´ˆê¸°í™”
 }
 
 // Called when the game starts or when spawned
@@ -98,26 +98,26 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void APlayer1::Look(const FInputActionValue& InputValue)
 {
     FVector2D LookInput = InputValue.Get<FVector2D>();
-    AddControllerPitchInput(LookInput.Y); // ¼öÁ÷ ÀÔ·Â Àû¿ë
-    AddControllerYawInput(LookInput.X); // ¼öÆò ÀÔ·Â Àû¿ë
+    AddControllerPitchInput(LookInput.Y); // ìˆ˜ì§ ì…ë ¥ ì ìš©
+    AddControllerYawInput(LookInput.X); // ìˆ˜í‰ ì…ë ¥ ì ìš©
 }
 
 void APlayer1::Move(const struct FInputActionValue& InputValue)
 {
     FVector2D value = InputValue.Get<FVector2D>();
-    // ¹æÇâÅ° ÀÔ·Â°ªÀ» ±â¹İÀ¸·Î ¹æÇâ ¼³Á¤
+    // ë°©í–¥í‚¤ ì…ë ¥ê°’ì„ ê¸°ë°˜ìœ¼ë¡œ ë°©í–¥ ì„¤ì •
     direction.X = value.X;
     direction.Y = value.Y;
 
-    // ¹æÇâÅ°°¡ ´­¸° »óÅÂ¸é IsMovingÀ» true·Î ¼³Á¤, ¾Æ´Ï¸é false·Î ¼³Á¤
+    // ë°©í–¥í‚¤ê°€ ëˆŒë¦° ìƒíƒœë©´ IsMovingì„ trueë¡œ ì„¤ì •, ì•„ë‹ˆë©´ falseë¡œ ì„¤ì •
     IsMoving = !value.IsZero();
 
-    // ÇÃ·¹ÀÌ¾î ÀÌµ¿ Ã³¸®
+    // í”Œë ˆì´ì–´ ì´ë™ ì²˜ë¦¬
     if (IsMoving)
     {
         FVector MoveDirection = FTransform(GetControlRotation()).TransformVector(direction);
         AddMovementInput(MoveDirection);
-        UpdateRotation(MoveDirection);  // ÀÌµ¿ ¹æÇâÀ¸·Î È¸Àü
+        UpdateRotation(MoveDirection);  // ì´ë™ ë°©í–¥ìœ¼ë¡œ íšŒì „
     }
 }
 
@@ -127,26 +127,26 @@ void APlayer1::InputJump(const struct FInputActionValue& InputValue)
     IsJumping = true;
 }
 
-void APlayer1::InputDash(const struct FInputActionValue& InputValue) // ´ë½¬ ½ÇÇà Á¶°Ç (Å° ÀÔ·Â °¨Áö)
+void APlayer1::InputDash(const struct FInputActionValue& InputValue) // ëŒ€ì‰¬ ì‹¤í–‰ ì¡°ê±´ (í‚¤ ì…ë ¥ ê°ì§€)
 {
     if (InputValue.Get<float>() > 0 && !IsDashing)
     {
         IsDashing = true;
-        float DashSpeed = 1200.0f; // ¼Óµµ°ª Á¶Á¤
+        float DashSpeed = 1200.0f; // ì†ë„ê°’ ì¡°ì •
         if (IsMoving)
         {
             FVector DashDirection;
             DashDirection = FTransform(GetControlRotation()).TransformVector(direction).GetSafeNormal();
-            // ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ ÁßÀÎ ¹æÇâÀ¸·Î ´ë½¬
-            PerformDash(DashDirection, DashSpeed); // ·ÎÄÃ ÁÂÇ¥°è¿¡¼­ ¾ÕÀ¸·Î ´ë½¬
+            // í”Œë ˆì´ì–´ê°€ ì´ë™ ì¤‘ì¸ ë°©í–¥ìœ¼ë¡œ ëŒ€ì‰¬
+            PerformDash(DashDirection, DashSpeed); // ë¡œì»¬ ì¢Œí‘œê³„ì—ì„œ ì•ìœ¼ë¡œ ëŒ€ì‰¬
         }
         else
         {
-            // ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ ÁßÀÌ ¾Æ´Ï¸é µÚ·Î ´ë½¬
-            PerformDash(GetActorForwardVector(), -DashSpeed); // ·ÎÄÃ ÁÂÇ¥°è¿¡¼­ µÚ·Î ´ë½¬
+            // í”Œë ˆì´ì–´ê°€ ì´ë™ ì¤‘ì´ ì•„ë‹ˆë©´ ë’¤ë¡œ ëŒ€ì‰¬
+            PerformDash(GetActorForwardVector(), -DashSpeed); // ë¡œì»¬ ì¢Œí‘œê³„ì—ì„œ ë’¤ë¡œ ëŒ€ì‰¬
         }
 
-        // Roll ¸Ş½ÃÁö Ãâ·Â ·ÎÁ÷ Ãß°¡
+        // Roll ë©”ì‹œì§€ ì¶œë ¥ ë¡œì§ ì¶”ê°€
         if (IsJumping && IsMoving)
         {
             PerformRoll(true); // ROLL1
@@ -157,7 +157,7 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // ´ë½¬ ½ÇÇ
         }
     }
 
-    // ´ë½¬ ÈÄ¿¡ IsMoving ÃÊ±âÈ­
+    // ëŒ€ì‰¬ í›„ì— IsMoving ì´ˆê¸°í™”
     IsMoving = false;
     direction = FVector::ZeroVector;
 }
@@ -168,8 +168,8 @@ void APlayer1::ResetDash()
     UCharacterMovementComponent* CharMovement = GetCharacterMovement();
     if (CharMovement)
     {
-        CharMovement->StopMovementImmediately(); // Áï½Ã ¸ØÃß±â
-        CharMovement->BrakingFrictionFactor = 2.f; // ¸¶Âû º¹±¸
+        CharMovement->StopMovementImmediately(); // ì¦‰ì‹œ ë©ˆì¶”ê¸°
+        CharMovement->BrakingFrictionFactor = 2.f; // ë§ˆì°° ë³µêµ¬
     }
 }
 
@@ -179,7 +179,7 @@ void APlayer1::PerformRoll(bool bForward)
     DisplayMessage(RollType);
 }
 
-// ¸Ş½ÃÁö È­¸é¿¡ Ãâ·Â
+// ë©”ì‹œì§€ í™”ë©´ì— ì¶œë ¥
 void APlayer1::DisplayMessage(FString Message, float Duration)
 {
     if (GEngine)
@@ -188,19 +188,19 @@ void APlayer1::DisplayMessage(FString Message, float Duration)
     }
 }
 
-// UpdateRotation ÇÔ¼ö ±¸Çö
+// UpdateRotation í•¨ìˆ˜ êµ¬í˜„
 void APlayer1::UpdateRotation(const FVector& MoveDirection)
 {
     if (!MoveDirection.IsNearlyZero())
     {
         FRotator NewRotation = MoveDirection.Rotation();
-        NewRotation.Pitch = 0.0f; // ÇÇÄ¡ °ªÀº À¯Áö
-        NewRotation.Roll = 0.0f;  // ·Ñ °ªÀº À¯Áö
+        NewRotation.Pitch = 0.0f; // í”¼ì¹˜ ê°’ì€ ìœ ì§€
+        NewRotation.Roll = 0.0f;  // ë¡¤ ê°’ì€ ìœ ì§€
         SetActorRotation(NewRotation);
     }
 }
 
-// ÂøÁö ÀÌº¥Æ® Ã³¸®
+// ì°©ì§€ ì´ë²¤íŠ¸ ì²˜ë¦¬
 void APlayer1::Landed(const FHitResult& Hit)
 {
     Super::Landed(Hit);
@@ -208,10 +208,10 @@ void APlayer1::Landed(const FHitResult& Hit)
 
     if (bAerialAttack)
     {
-        // °øÁß °ø°İ ÈÄ ÂøÁö ½Ã ÀÏÁ¤ ½Ã°£ µ¿¾È °ø°İÀ» ºñÈ°¼ºÈ­
+        // ê³µì¤‘ ê³µê²© í›„ ì°©ì§€ ì‹œ ì¼ì • ì‹œê°„ ë™ì•ˆ ê³µê²©ì„ ë¹„í™œì„±í™”
         bCanAttack = false;
         GetWorldTimerManager().SetTimer(AttackDisableTimer, this, &APlayer1::EnableAttack, 0.2f, false);
-        bAerialAttack = false; // °øÁß °ø°İ »óÅÂ ÃÊ±âÈ­
+        bAerialAttack = false; // ê³µì¤‘ ê³µê²© ìƒíƒœ ì´ˆê¸°í™”
     }
 }
 
@@ -222,7 +222,7 @@ void APlayer1::EnableAttack()
 
 void APlayer1::InputAttackStart(const struct FInputActionValue& InputValue)
 {
-    if (!bCanAttack) return; // °ø°İÀÌ ºñÈ°¼ºÈ­µÈ °æ¿ì ¹İÈ¯
+    if (!bCanAttack) return; // ê³µê²©ì´ ë¹„í™œì„±í™”ëœ ê²½ìš° ë°˜í™˜
     bIsStrongAttack = false;
 
     if (IsJumping)
@@ -231,7 +231,7 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& InputValue)
         return;
     }
 
-    // 1.5ÃÊ ÈÄ¿¡ °­ÇÑ °ø°İ Æ®¸®°Å
+    // 1.5ì´ˆ í›„ì— ê°•í•œ ê³µê²© íŠ¸ë¦¬ê±°
     GetWorldTimerManager().SetTimer(StrongAttackTimer, this, &APlayer1::PerformStrongAttack, 1.5f, false);
 
 }
@@ -240,13 +240,13 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 {
     if (!bCanAttack || bIsStrongAttack || IsJumping)
     {
-        // °­ÇÑ °ø°İ ¶Ç´Â °øÁß °ø°İÀÌ¸é ÄŞº¸ °ø°İÀ» ½ÇÇàÇÏÁö ¾ÊÀ½
+        // ê°•í•œ ê³µê²© ë˜ëŠ” ê³µì¤‘ ê³µê²©ì´ë©´ ì½¤ë³´ ê³µê²©ì„ ì‹¤í–‰í•˜ì§€ ì•ŠìŒ
         return;
     }
 
-    GetWorldTimerManager().ClearTimer(StrongAttackTimer); // °­ÇÑ °ø°İ Å¸ÀÌ¸Ó ÁßÁö
+    GetWorldTimerManager().ClearTimer(StrongAttackTimer); // ê°•í•œ ê³µê²© íƒ€ì´ë¨¸ ì¤‘ì§€
 
-    // ÄŞº¸ °ø°İ Ã³¸®
+    // ì½¤ë³´ ê³µê²© ì²˜ë¦¬
     switch (AttackStage)
     {
     case 0:
@@ -272,10 +272,10 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
         break;
     }
 
-    // ´ÙÀ½ ´Ü°è·Î ÀüÈ¯
+    // ë‹¤ìŒ ë‹¨ê³„ë¡œ ì „í™˜
     AttackStage = (AttackStage + 1) % 4;
 
-    // ÄŞº¸ Å¸ÀÌ¸Ó Àç¼³Á¤
+    // ì½¤ë³´ íƒ€ì´ë¨¸ ì¬ì„¤ì •
     GetWorldTimerManager().ClearTimer(AttackComboTimer);
     GetWorldTimerManager().SetTimer(AttackComboTimer, this, &APlayer1::ResetCombo, 0.5f, false);
 }
@@ -283,14 +283,14 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 void APlayer1::InputAerialAttack()
 {
     DisplayMessage("Aerial Attack!");
-    bAerialAttack = true; // °øÁß °ø°İ »óÅÂ ¼³Á¤
-    const float FastFallSpeed = -1200.0f; // ºü¸¥ ³«ÇÏ ¼Óµµ Á¶Á¤
-    LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // ºü¸£°Ô ³«ÇÏ
+    bAerialAttack = true; // ê³µì¤‘ ê³µê²© ìƒíƒœ ì„¤ì •
+    const float FastFallSpeed = -1200.0f; // ë¹ ë¥¸ ë‚™í•˜ ì†ë„ ì¡°ì •
+    LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // ë¹ ë¥´ê²Œ ë‚™í•˜
 }
 
 void APlayer1::PerformStrongAttack()
 {
-    if (bIsAttackHeld) // °ø°İ ¹öÆ°ÀÌ ´­¸° »óÅÂ¿¡¼­¸¸ °­ÇÑ °ø°İ ½ÇÇà
+    if (bIsAttackHeld) // ê³µê²© ë²„íŠ¼ì´ ëˆŒë¦° ìƒíƒœì—ì„œë§Œ ê°•í•œ ê³µê²© ì‹¤í–‰
     {
         bIsStrongAttack = true;
         DisplayMessage("Strong Attack!");
@@ -363,6 +363,7 @@ void APlayer1::DecreaseHealth(int32 Damage)
 
 void APlayer1::Die()
 {
-    // »ç¸Á ¸Ş½ÃÁö Ç¥½Ã
+    // ì‚¬ë§ ë©”ì‹œì§€ í‘œì‹œ
     DisplayMessage(TEXT("You Died!"), 5.0f);
 }
+
