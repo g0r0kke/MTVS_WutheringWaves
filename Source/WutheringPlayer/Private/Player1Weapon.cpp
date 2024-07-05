@@ -52,4 +52,3 @@ void APlayer1Weapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

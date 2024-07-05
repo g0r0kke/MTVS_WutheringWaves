@@ -48,33 +48,6 @@ APlayer1::APlayer1()
 
     AttackStage = 0; // 공격 단계 초기화
     bIsStrongAttack = false; // 강한 공격 초기화
-
-    //    // 캐릭터 블루프린트 클래스 로드
-    //    ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Game/KHJ/Blueprints/BP_P1.BP_P1_C"));
-    //    if (Player1BP.Succeeded())
-    //    {
-    //        BP_Player1 = Player1BP.Class;
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player1 loaded successfully"));
-    //    }
-    //    else
-    //    {
-    //        BP_Player1 = nullptr;
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player1"));
-    //    }
-    //
-    //    ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Game/KHJ/Blueprints/BP_P2.BP_P2_C"));
-    //    if (Player2BP.Succeeded())
-    //    {
-    //        BP_Player2 = Player2BP.Class;
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("BP_Player2 loaded successfully"));
-    //    }
-    //    else
-    //    {
-    //        BP_Player2 = nullptr;
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load BP_Player2"));
-    //    }
-    //
-    //    CurrentPlayerInstance = this; // 현재 플레이어 인스턴스 초기화
 }
 
 // Called when the game starts or when spawned
@@ -115,10 +88,6 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
         PlayerInput->BindAction(inp_Attack, ETriggerEvent::Started, this, &APlayer1::InputAttackStart);
         PlayerInput->BindAction(inp_Attack, ETriggerEvent::Completed, this, &APlayer1::InputAttackStop);
         PlayerInput->BindAction(inp_Skill, ETriggerEvent::Started, this, &APlayer1::InputSkill);
-
-        //// 캐릭터 전환 바인딩
-        //PlayerInput->BindAction(inp_SwitchTo1, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 1);
-        //PlayerInput->BindAction(inp_SwitchTo2, ETriggerEvent::Started, this, &APlayer1::SwitchToCharacter, 2);
     }
 }
 
@@ -372,77 +341,3 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
         GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
     }
 }
-
-//// 캐릭터 전환 함수 구현
-//void APlayer1::SwitchToCharacter(int32 CharacterIndex)
-//{
-//    auto pc = Cast<APlayerController>(Controller);
-//    if (pc)
-//    {
-//        TSubclassOf<APawn> NewCharacterClass = (CharacterIndex == 1) ? BP_Player1 : BP_Player2;
-//        if (NewCharacterClass && GetClass() != NewCharacterClass)
-//        {
-//            FTransform SpawnTransform = GetActorTransform();
-//            APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
-//            if (NewCharacter)
-//            {
-//                pc->UnPossess();
-//                pc->Possess(NewCharacter);
-//                Destroy(); // 기존 캐릭터 제거
-//            }
-//        }
-//    }
-//}
-
-//void APlayer1::SwitchToCharacter(int32 CharacterIndex)
-//{
-//    auto pc = Cast<APlayerController>(Controller);
-//    if (pc)
-//    {
-//        TSubclassOf<APawn> NewCharacterClass = nullptr;
-//        if (CharacterIndex == 1)
-//        {
-//            NewCharacterClass = BP_Player1;
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Switching to Player 1"));
-//        }
-//        else if (CharacterIndex == 2)
-//        {
-//            NewCharacterClass = BP_Player2;
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Switching to Player 2"));
-//        }
-//
-//        if (!NewCharacterClass)
-//        {
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("NewCharacterClass is invalid"));
-//            return;
-//        }
-//
-//        if (CurrentPlayerInstance && CurrentPlayerInstance->GetClass() == NewCharacterClass)
-//        {
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("NewCharacterClass is the same as the current class"));
-//            return;
-//        }
-//
-//        FVector SpawnLocation = GetActorLocation() + FVector(100, -100, 0);
-//        FRotator SpawnRotation = GetActorRotation();
-//        FActorSpawnParameters SpawnParams;
-//        SpawnParams.Owner = this;
-//        APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
-//        if (NewCharacter)
-//        {
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Spawned new character successfully"));
-//            pc->UnPossess();
-//            pc->Possess(NewCharacter);
-//            CurrentPlayerInstance = NewCharacter;
-//
-//            // 기존 캐릭터 비활성화
-//            SetActorHiddenInGame(true);
-//            SetActorEnableCollision(false);
-//            SetActorTickEnabled(false);
-//        }
-//        else
-//        {
-//            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to spawn new character"));
-//        }
-//    }
-//}
