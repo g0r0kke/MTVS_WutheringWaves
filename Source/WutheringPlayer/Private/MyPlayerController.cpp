@@ -9,20 +9,18 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Player1.h"
 
 AMyPlayerController::AMyPlayerController()
 {
-	// Ä³¸¯ÅÍ ºí·çÇÁ¸°Æ® Å¬·¡½º ·Îµå
+	// ìºë¦­í„° ë¸”ë£¨í”„ë¦°íŠ¸ í´ë˜ìŠ¤ ë¡œë“œ
 	static ConstructorHelpers::FClassFinder<APawn> Player1BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P1.BP_P1_C'"));
 	if (Player1BP.Succeeded())
 	{
 		BP_P1 = Player1BP.Class;
 		UE_LOG(LogTemp, Warning, TEXT("BP_P1 loaded successfully"));
-	}
-	else
-	{
-		BP_P1 = nullptr;
-		UE_LOG(LogTemp, Warning, TEXT("Failed to load BP_P1"));
+		bIsP1Alive = true;
+		P1Health = 6; // ì´ˆê¸° ì²´ë ¥ ì„¤ì •
 	}
 
 	static ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P2.BP_P2_C'"));
@@ -30,11 +28,8 @@ AMyPlayerController::AMyPlayerController()
 	{
 		BP_P2 = Player2BP.Class;
 		UE_LOG(LogTemp, Warning, TEXT("BP_P2 loaded successfully"));
-	}
-	else
-	{
-		BP_P2 = nullptr;
-		UE_LOG(LogTemp, Warning, TEXT("Failed to load BP_P2"));
+		bIsP2Alive = true;
+		P2Health = 10; // ì´ˆê¸° ì²´ë ¥ ì„¤ì •
 	}
 }
 
@@ -43,7 +38,7 @@ void AMyPlayerController::BeginPlay()
 	Super::BeginPlay();
 	CurrentPlayerInstance = GetPawn();
 
-	// Enhanced Input ½Ã½ºÅÛ ÃÊ±âÈ­
+	// Enhanced Input ì‹œìŠ¤í…œ ì´ˆê¸°í™”
 	if (this)
 	{
 		auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
@@ -68,7 +63,17 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::SwitchToCharacter1()
 {
-	SwitchToCharacter(BP_P1);
+	if (bIsP1Alive)
+	{
+		SwitchToCharacter(BP_P1);
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 is dead!"));
+		}
+	}
 }
 
 void AMyPlayerController::SwitchToCharacter2()
@@ -83,14 +88,28 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 		return;
 	}
 
-	// ÇöÀç ¼ÒÀ¯ÇÑ Ä³¸¯ÅÍÀÇ ¹«±â¸¦ Ã£¾Æ¼­ ¼û±é´Ï´Ù.
+	// í˜„ì¬ ìºë¦­í„°ì˜ ì²´ë ¥ì„ ì €ì¥í•©ë‹ˆë‹¤.
+	APlayer1* CurrentBaseCharacter = Cast<APlayer1>(CurrentPlayerInstance);
+	if (CurrentBaseCharacter)
+	{
+		if (CurrentBaseCharacter->GetClass() == BP_P1)
+		{
+			P1Health = CurrentBaseCharacter->Health;
+		}
+		else if (CurrentBaseCharacter->GetClass() == BP_P2)
+		{
+			P2Health = CurrentBaseCharacter->Health;
+		}
+	}
+  
+	// í˜„ì¬ ì†Œìœ í•œ ìºë¦­í„°ì˜ ë¬´ê¸°ë¥¼ ì°¾ì•„ì„œ ìˆ¨ê¹ë‹ˆë‹¤.
 	ACharacter* CurrentCharacter = Cast<ACharacter>(CurrentPlayerInstance);
 	if (CurrentCharacter)
 	{
-		// ¹«±â°¡ ÀåÂøµÈ ¼ÒÄÏ ÀÌ¸§À» ÁöÁ¤ÇÕ´Ï´Ù.
-		FName WeaponSocketName(TEXT("LeftHandSocket")); // ¼ÒÄÏ ÀÌ¸§À» ¹®ÀÚ¿­·Î ÁöÁ¤
+		// ë¬´ê¸°ê°€ ì¥ì°©ëœ ì†Œì¼“ ì´ë¦„ì„ ì§€ì •í•©ë‹ˆë‹¤.
+		FName WeaponSocketName(TEXT("LeftHandSocket")); // ì†Œì¼“ ì´ë¦„ì„ ë¬¸ìì—´ë¡œ ì§€ì •
 
-		// ¹«±â¸¦ ¼ÒÄÏ¿¡¼­ Ã£¾Æ¼­ ¼û±é´Ï´Ù.
+		// ë¬´ê¸°ë¥¼ ì†Œì¼“ì—ì„œ ì°¾ì•„ì„œ ìˆ¨ê¹ë‹ˆë‹¤.
 		USkeletalMeshComponent* MeshComp = CurrentCharacter->GetMesh();
 		if (MeshComp)
 		{
@@ -117,6 +136,21 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 	APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
 	if (NewCharacter)
 	{
+		// ì²´ë ¥ ì„¤ì •
+		APlayer1* NewBaseCharacter = Cast<APlayer1>(NewCharacter);
+		if (NewBaseCharacter)
+		{
+			if (NewCharacterClass == BP_P1)
+			{
+				NewBaseCharacter->Health = P1Health;
+			}
+			else if (NewCharacterClass == BP_P2)
+			{
+				NewBaseCharacter->Health = P2Health;
+			}
+		}
+
+		// ìƒˆ ìºë¦­í„° ìŠ¤í°
 		Possess(NewCharacter);
 		CurrentPlayerInstance->Destroy();
 		CurrentPlayerInstance = NewCharacter;
