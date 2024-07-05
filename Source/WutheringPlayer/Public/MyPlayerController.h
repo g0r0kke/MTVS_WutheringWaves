@@ -36,11 +36,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* InputMappingContext;
 
+	// 캐릭터 생존 여부
+	bool bIsP1Alive;
+	bool bIsP2Alive;
+
+	// 캐릭터 체력 저장
+	int32 P1Health;
+	int32 P2Health;
+
+	void SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass);
+
 private:
 	APawn* CurrentPlayerInstance;
 
 	void SwitchToCharacter1();
 	void SwitchToCharacter2();
-
-	void SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass);
 };

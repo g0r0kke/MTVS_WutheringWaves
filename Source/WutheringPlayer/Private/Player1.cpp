@@ -16,6 +16,10 @@ APlayer1::APlayer1()
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
+    // 초기 체력 설정
+    Health = 100;
+    bIsAlive = true;
+
     // 1. SkeletalMesh 로드
     ConstructorHelpers::FObjectFinder<USkeletalMesh> TempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/Mixamo/Big_Rib_Hit__.Big_Rib_Hit__'"));
 
@@ -91,16 +95,16 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     }
 }
 
-void APlayer1::Look(const FInputActionValue& inputValue)
+void APlayer1::Look(const FInputActionValue& InputValue)
 {
-    FVector2D LookInput = inputValue.Get<FVector2D>();
+    FVector2D LookInput = InputValue.Get<FVector2D>();
     AddControllerPitchInput(LookInput.Y); // 수직 입력 적용
     AddControllerYawInput(LookInput.X); // 수평 입력 적용
 }
 
-void APlayer1::Move(const struct FInputActionValue& inputValue)
+void APlayer1::Move(const struct FInputActionValue& InputValue)
 {
-    FVector2D value = inputValue.Get<FVector2D>();
+    FVector2D value = InputValue.Get<FVector2D>();
     // 방향키 입력값을 기반으로 방향 설정
     direction.X = value.X;
     direction.Y = value.Y;
@@ -117,15 +121,15 @@ void APlayer1::Move(const struct FInputActionValue& inputValue)
     }
 }
 
-void APlayer1::InputJump(const struct FInputActionValue& inputValue)
+void APlayer1::InputJump(const struct FInputActionValue& InputValue)
 {
     Jump();
     IsJumping = true;
 }
 
-void APlayer1::InputDash(const struct FInputActionValue& inputValue) // 대쉬 실행 조건 (키 입력 감지)
+void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 실행 조건 (키 입력 감지)
 {
-    if (inputValue.Get<float>() > 0 && !IsDashing)
+    if (InputValue.Get<float>() > 0 && !IsDashing)
     {
         IsDashing = true;
         float DashSpeed = 1200.0f; // 속도값 조정
@@ -216,7 +220,7 @@ void APlayer1::EnableAttack()
     bCanAttack = true;
 }
 
-void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
+void APlayer1::InputAttackStart(const struct FInputActionValue& InputValue)
 {
     if (!bCanAttack) return; // 공격이 비활성화된 경우 반환
     bIsStrongAttack = false;
@@ -232,7 +236,7 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& inputValue)
 
 }
 
-void APlayer1::InputAttackStop(const struct FInputActionValue& inputValue)
+void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 {
     if (!bCanAttack || bIsStrongAttack || IsJumping)
     {
@@ -298,7 +302,7 @@ void APlayer1::ResetCombo()
     AttackStage = 0;
 }
 
-void APlayer1::InputSkill(const struct FInputActionValue& inputValue)
+void APlayer1::InputSkill(const struct FInputActionValue& InputValue)
 {
     DisplayMessage("Skill Attack!");
     //PerformDash(GetActorForwardVector(), 1200.0f);
@@ -340,4 +344,25 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
         FTimerHandle UnusedHandle;
         GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
     }
+}
+
+void APlayer1::DecreaseHealth(int32 Damage)
+{
+    if (!bIsAlive)
+    {
+        return;
+    }
+
+    Health -= Damage;
+
+    if (Health <= 0)
+    {
+        Die();
+    }
+}
+
+void APlayer1::Die()
+{
+    // 사망 메시지 표시
+    DisplayMessage(TEXT("You Died!"), 5.0f);
 }
