@@ -57,11 +57,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* inp_Skill;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//class UInputAction* inp_SwitchTo1; // 캐릭터 슬롯 1번으로 전환
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//class UInputAction* inp_SwitchTo2; // 캐릭터 슬롯 2번으로 전환
-
 	// 입력 이벤트 처리 함수
 	void Look(const struct FInputActionValue& inputValue);
 
@@ -131,16 +126,4 @@ protected:
 	void Attack3Start();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack4Start();
-
-//private:
-//	// 캐릭터 블루프린트 클래스 참조
-//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-//    TSubclassOf<APawn> BP_Player1;
-//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-//    TSubclassOf<APawn> BP_Player2;
-//
-//    APawn* Player1Instance;
-//    APawn* Player2Instance;
-//
-//	APawn* CurrentPlayerInstance; // 현재 활성화된 플레이어 인스턴스
 };
