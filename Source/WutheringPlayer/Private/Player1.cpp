@@ -44,7 +44,6 @@ APlayer1::APlayer1()
     tpsCamComp->SetupAttachment(springArmComp);
     tpsCamComp->bUsePawnControlRotation = false;
 
-    bUseControllerRotationYaw = true;
     IsDashing = false;
     IsMoving = false;
     bCanAttack = true; // 공격 가능 초기화
@@ -277,7 +276,7 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 
     // 콤보 타이머 재설정
     GetWorldTimerManager().ClearTimer(AttackComboTimer);
-    GetWorldTimerManager().SetTimer(AttackComboTimer, this, &APlayer1::ResetCombo, 0.5f, false);
+    GetWorldTimerManager().SetTimer(AttackComboTimer, this, &APlayer1::ResetCombo, 0.8f, false);
 }
 
 void APlayer1::InputAerialAttack()
@@ -337,12 +336,12 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
     UCharacterMovementComponent* CharMovement = GetCharacterMovement();
     if (CharMovement)
     {
-        CharMovement->BrakingFrictionFactor = 0.f;
-        LaunchCharacter(DashDirection * DashSpeed, true, true);
-        CharMovement->BrakingFrictionFactor = 2.f;
+		CharMovement->BrakingFrictionFactor = 0.f;
+		LaunchCharacter(DashDirection * DashSpeed, true, true);
+		CharMovement->BrakingFrictionFactor = 2.f;
 
-        FTimerHandle UnusedHandle;
-        GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
     }
 }
 

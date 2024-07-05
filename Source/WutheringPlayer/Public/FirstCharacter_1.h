@@ -16,6 +16,10 @@ public:
 	// Sets default values for this character's properties
 	AFirstCharacter_1();
 
+	// P1Weapon 전역 변수 선언
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	class APlayer1Weapon* P1Weapon;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
