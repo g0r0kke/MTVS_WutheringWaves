@@ -57,20 +57,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* inp_Skill;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//class UInputAction* inp_SwitchTo1; // 캐릭터 슬롯 1번으로 전환
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//class UInputAction* inp_SwitchTo2; // 캐릭터 슬롯 2번으로 전환
-
 	// 입력 이벤트 처리 함수
-	void Look(const struct FInputActionValue& inputValue);
+	void Look(const struct FInputActionValue& InputValue);
 
 	// 이동 함수 선언
-	void Move(const struct FInputActionValue& inputValue);
+	void Move(const struct FInputActionValue& InputValue);
 
-	void InputJump(const struct FInputActionValue& inputValue);
-	void InputDash(const struct FInputActionValue& inputValue);
-	//void InputSkill(const struct FInputActionValue& inputValue);
+	void InputJump(const struct FInputActionValue& InputValue);
+	void InputDash(const struct FInputActionValue& InputValue);
 
 	void ResetDash();
 
@@ -79,6 +73,21 @@ public:
 
 	// 구르기 처리 함수
 	void PerformRoll(bool bForward);
+
+	// 플레이어 체력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 Health;
+
+	// 생존 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	bool bIsAlive;
+
+	// 체력 감소 함수
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void DecreaseHealth(int32 Damage);
+
+	// 사망 처리 함수
+	virtual void Die();
 
 protected:
 	FTimerHandle TimerHandle_RollMessage;
@@ -91,9 +100,8 @@ protected:
 
 	void UpdateRotation(const FVector& MoveDirection);
 
-	void InputAttackStart(const FInputActionValue& inputValue);
-	void InputAttackStop(const FInputActionValue& inputValue);
-	//void InputAerialAttack();
+	void InputAttackStart(const FInputActionValue& InputValue);
+	void InputAttackStop(const FInputActionValue& InputValue);
 	void EnableAttack(); // 공격 활성화 함수
 
 	// 공격 단계 관리
@@ -103,19 +111,10 @@ protected:
 	bool bIsStrongAttack;
 	bool bIsAttackHeld;  // 공격 버튼이 눌린 상태인지 확인하는 변수
 	void ResetCombo();
-	//void PerformStrongAttack();
-
-	//void PerformFirstAttack();
-	//void PerformSecondAttack();
-	//void PerformThirdAttack();
-	//void PerformFourthAttack();
 
 	void PerformDash(const FVector& DashDirection, float DashSpeed);
 
-	//// 캐릭터 전환 함수
-	//void SwitchToCharacter(int32 CharacterIndex);
-
-	virtual void InputSkill(const struct FInputActionValue& inputValue);
+	virtual void InputSkill(const struct FInputActionValue& InputValue);
 	virtual void InputAerialAttack();
 	virtual void PerformStrongAttack();
 	virtual void PerformFirstAttack();
@@ -123,26 +122,12 @@ protected:
 	virtual void PerformThirdAttack();
 	virtual void PerformFourthAttack();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack1Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack2Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack3Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack4Start();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
-	void StrongAttackStart();
-
-//private:
-//	// 캐릭터 블루프린트 클래스 참조
-//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-//    TSubclassOf<APawn> BP_Player1;
-//    UPROPERTY(EditDefaultsOnly, Category = "Characters")
-//    TSubclassOf<APawn> BP_Player2;
-//
-//    APawn* Player1Instance;
-//    APawn* Player2Instance;
-//
-//	APawn* CurrentPlayerInstance; // 현재 활성화된 플레이어 인스턴스
 };
