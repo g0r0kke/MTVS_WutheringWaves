@@ -42,10 +42,10 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	class USkeletalMeshComponent* LeftGunMeshComp;
+	class APlayer2WeaponL* LeftGunMeshComp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	class USkeletalMeshComponent* RightGunMeshComp;
+	class APlayer2WeaponL* RightGunMeshComp;
 
 	FTimerHandle AutoFireTimerHandle;
 };
