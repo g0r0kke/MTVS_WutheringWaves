@@ -117,16 +117,16 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 			p1->P1Weapon->SetActorTickEnabled(false);
 		}
 	}
-	//else if (CurrentCharacter->IsA<AFirstCharacter_1>())
-	//{
-	//	AFirstCharacter_1* p2 = Cast<AFirstCharacter_1>(CurrentPlayerInstance);
-	//	if (p2->P1Weapon)
-	//	{
-	//		p2->P1Weapon->SetActorHiddenInGame(true);
-	//		p2->P1Weapon->SetActorEnableCollision(false);
-	//		p2->P1Weapon->SetActorTickEnabled(false);
-	//	}
-	//}
+	else if (CurrentCharacter->IsA<AFirstCharacter_1>())
+	{
+		AFirstCharacter_1* p2 = Cast<AFirstCharacter_1>(CurrentPlayerInstance);
+		if (p2->P1Weapon)
+		{
+			p2->P1Weapon->SetActorHiddenInGame(true);
+			p2->P1Weapon->SetActorEnableCollision(false);
+			p2->P1Weapon->SetActorTickEnabled(false);
+		}
+	}
 	//else
 	//{
 	//	return;
