@@ -33,6 +33,9 @@ public:
     UFUNCTION(Category = "PlayerAttack")
     void WeaponAttack(EAttackType AttackType);
 
+	UPROPERTY(BlueprintReadOnly)
+	int32 P1AttackDamage;
+
 	// P1Attack 함수 선언
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerAttack")
     void P1Attack(int32 P1ATK);
