@@ -35,7 +35,7 @@ APlayer1::APlayer1()
     // 3-1. SpringArm 컴포넌트 붙이기
     CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
     CameraArm->SetupAttachment(RootComponent);
-    CameraArm->SetRelativeLocation(FVector(0, 0, 180));
+    CameraArm->SetRelativeLocation(FVector(0, 0, 90));
     CameraArm->TargetArmLength = 400;
     CameraArm->bUsePawnControlRotation = true;
     
