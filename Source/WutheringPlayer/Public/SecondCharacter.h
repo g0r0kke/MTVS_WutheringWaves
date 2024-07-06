@@ -39,13 +39,24 @@ public:
 
 	// 라인 트레이스 발사 메서드
 	void LineTraceShoot(USceneComponent* GunComponent, float Strength = 1.0f);
+			UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	class APlayer2WeaponL* P2WeaponL;
+
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	class APlayer2WeaponL* P2WeaponR;
+
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	class APlayer2WeaponL* LeftGunMeshComp;
+	//UPROPERTY(VisibleAnywhere, Category = "Components")
+	//class APlayer2WeaponL* LeftGunMeshComp;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	class APlayer2WeaponL* RightGunMeshComp;
+	//UPROPERTY(VisibleAnywhere, Category = "Components")
+	//class APlayer2WeaponL* RightGunMeshComp;
+
+	
+
+	// P1Weapon 전역 변수 선언
+
 
 	FTimerHandle AutoFireTimerHandle;
 };
