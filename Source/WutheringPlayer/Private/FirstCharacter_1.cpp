@@ -51,6 +51,14 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
 	Super::PerformDash(GetActorForwardVector(), 2000.0f);
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::Skill);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 }
 
 void AFirstCharacter_1::InputAerialAttack()
@@ -58,6 +66,14 @@ void AFirstCharacter_1::InputAerialAttack()
 	Super::DisplayMessage("P1 Aerial Attack!");
 	Super::bAerialAttack = true; // 공중 공격 상태 설정
 	AerialAttackStart();
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::AerialAttack);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 	const float FastFallSpeed = -1200.0f; // 빠른 낙하 속도 조정
 	Super::LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // 빠르게 낙하
 }
@@ -66,6 +82,14 @@ void AFirstCharacter_1::PerformStrongAttack()
 {
 	Super::bIsStrongAttack = true;
 	Super::DisplayMessage("P1 Strong Attack!");
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::StrongAttack);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 	StrongAttackStart();
 }
 
@@ -73,23 +97,55 @@ void AFirstCharacter_1::PerformFirstAttack()
 {
 	Super::DisplayMessage("P1 First Attack!");
 	//Super::PerformDash(GetActorForwardVector(), 1100.0f);
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::Attack1);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 }
 
 void AFirstCharacter_1::PerformSecondAttack()
 {
 	Super::DisplayMessage("P1 Second Attack!");
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::Attack2);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 	//Super::PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void AFirstCharacter_1::PerformThirdAttack()
 {
 	Super::DisplayMessage("P1 Third Attack!");
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::Attack3);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 	//Super::PerformDash(GetActorForwardVector(), 1300.0f);
 }
 
 void AFirstCharacter_1::PerformFourthAttack()
 {
 	Super::DisplayMessage("P1 Fourth Attack!");
+	if (P1Weapon)
+	{
+		P1Weapon->WeaponAttack(EAttackType::Attack4);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
 	//Super::PerformDash(GetActorForwardVector(), 1400.0f);
 }
 
