@@ -28,10 +28,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
-	class USpringArmComponent* springArmComp;
+	class USpringArmComponent* CameraArm;
 	UPROPERTY(VisibleAnywhere, Category = Camera)
-	class UCameraComponent* tpsCamComp;
-
+	class UCameraComponent* FollowCamera;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* imc_Player;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
