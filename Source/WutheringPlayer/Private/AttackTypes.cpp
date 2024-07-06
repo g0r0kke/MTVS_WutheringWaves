@@ -1,0 +1,12 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "AttackTypes.h"
+
+AttackTypes::AttackTypes()
+{
+}
+
+AttackTypes::~AttackTypes()
+{
+}
