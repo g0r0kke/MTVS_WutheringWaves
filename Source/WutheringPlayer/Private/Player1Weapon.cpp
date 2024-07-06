@@ -113,11 +113,7 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 
 void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
 {
-    if (GEngine)
-    {
-        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
-    }
+    P1ATK = P1AttackDamage;
 }
 
 // Called when the game starts or when spawned
