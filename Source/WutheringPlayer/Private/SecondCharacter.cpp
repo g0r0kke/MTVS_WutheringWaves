@@ -9,6 +9,8 @@
 ASecondCharacter::ASecondCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
+    P2WeaponL = nullptr; // 초기화
+    P2WeaponR = nullptr; // 초기화
 }
 
 // Called when the game starts or when spawned
@@ -17,17 +19,17 @@ void ASecondCharacter::BeginPlay()
     Super::BeginPlay();
 
     // Set up left gun mesh component
-    LeftGunMeshComp = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
-    if (LeftGunMeshComp)
+    P2WeaponL = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
+    if (P2WeaponL)
     {
-        LeftGunMeshComp->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("LeftHandSocket"));
+        P2WeaponL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("LeftHandSocket"));
     }
 
     // Set up right gun mesh component
-    RightGunMeshComp = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
-    if (RightGunMeshComp)
+    P2WeaponR = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
+    if (P2WeaponR)
     {
-        RightGunMeshComp->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("RightHandSocket"));
+        P2WeaponR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("RightHandSocket"));
     }
 }
 
@@ -55,27 +57,45 @@ void ASecondCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void ASecondCharacter::PerformFirstAttack()
 {
     DisplayMessage("P2 First Attack!");
-    LineTraceShoot(LeftGunMeshComp->GetMeshComponent()); // 수정됨
+    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponL->GetMeshComponent());
+    }
 }
 
 void ASecondCharacter::PerformSecondAttack()
 {
     DisplayMessage("P2 Second Attack!");
-    LineTraceShoot(RightGunMeshComp->GetMeshComponent()); // 수정됨
+    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponR->GetMeshComponent());
+    }
 }
 
 void ASecondCharacter::PerformThirdAttack()
 {
     DisplayMessage("P2 Third Attack!");
-    LineTraceShoot(LeftGunMeshComp->GetMeshComponent()); // 수정됨
-    LineTraceShoot(RightGunMeshComp->GetMeshComponent()); // 수정됨
+    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponL->GetMeshComponent());
+    }
+    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponR->GetMeshComponent());
+    }
 }
 
 void ASecondCharacter::PerformFourthAttack()
 {
     DisplayMessage("P2 Fourth Attack!");
-    LineTraceShoot(LeftGunMeshComp->GetMeshComponent(), 2.0f); // Strong attack // 수정됨
-    LineTraceShoot(RightGunMeshComp->GetMeshComponent(), 2.0f); // Strong attack // 수정됨
+    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponL->GetMeshComponent(), 2.0f); // Strong attack
+    }
+    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponR->GetMeshComponent(), 2.0f); // Strong attack
+    }
 }
 
 // Skill attack methods
@@ -94,13 +114,25 @@ void ASecondCharacter::StopSkill(const FInputActionValue& inputValue)
 
 void ASecondCharacter::AutoFire()
 {
-    LineTraceShoot(LeftGunMeshComp->GetMeshComponent()); // 수정됨
-    LineTraceShoot(RightGunMeshComp->GetMeshComponent()); // 수정됨
+    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponL->GetMeshComponent());
+    }
+    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+    {
+        LineTraceShoot(P2WeaponR->GetMeshComponent());
+    }
 }
 
 // Line trace shooting method
 void ASecondCharacter::LineTraceShoot(USceneComponent* GunMeshComponent, float Strength)
 {
+    if (!GunMeshComponent)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("GunMeshComponent is null"));
+        return;
+    }
+
     FVector Start = GunMeshComponent->GetComponentLocation(); // Start point: gun mesh location
     FVector ForwardVector = GetActorForwardVector(); // Character's forward vector
     FVector End = ((ForwardVector * 5000.f * Strength) + Start); // End point: 5000 units forward * strength

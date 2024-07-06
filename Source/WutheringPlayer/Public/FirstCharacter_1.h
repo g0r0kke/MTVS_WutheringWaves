@@ -16,6 +16,10 @@ public:
 	// Sets default values for this character's properties
 	AFirstCharacter_1();
 
+	// P1Weapon 전역 변수 선언
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	class APlayer1Weapon* P1Weapon;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,6 +38,7 @@ public:
 	virtual void PerformSecondAttack() override;
 	virtual void PerformThirdAttack() override;
 	virtual void PerformFourthAttack() override;
+	virtual void Die() override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void SkillStart();
@@ -41,8 +46,4 @@ public:
 	void AerialAttackStart();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
-
-	//// 무기 스켈레탈메시
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
-	//class USkeletalMeshComponent* weaponMeshComp;
 };

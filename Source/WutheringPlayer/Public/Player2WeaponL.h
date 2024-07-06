@@ -14,13 +14,16 @@ class WUTHERINGPLAYER_API APlayer2WeaponL : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	APlayer2WeaponL();
+	APlayer2WeaponL(const FObjectInitializer& ObjectInitializer);
+	UStaticMeshComponent* GetMeshComponent() const { return MeshComponent; }
 	// ¹«±â ½ºÄÌ·¹Å»¸Þ½Ã
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
+	UPROPERTY(EditAnywhere,  Category=WeaponMesh)
 	class UStaticMeshComponent* weaponMeshComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere )
 	class USceneComponent* BoxComp;
+	 UPROPERTY(VisibleAnywhere, Category = "Components")
+    UStaticMeshComponent* MeshComponent;
 	
 protected:
 	// Called when the game starts or when spawned
