@@ -63,42 +63,42 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
             }
             break;
         case EAttackType::Attack2:
-            P1Attack(1);
+            P1Attack(2);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
             }
             break;
         case EAttackType::Attack3:
-            P1Attack(1);
+            P1Attack(3);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
             }
             break;
         case EAttackType::Attack4:
-            P1Attack(1);
+            P1Attack(4);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FourthAttack"));
             }
             break;
         case EAttackType::StrongAttack:
-            P1Attack(1);
+            P1Attack(5);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Strong Attack"));
             }
             break;
         case EAttackType::AerialAttack:
-            P1Attack(1);
+            P1Attack(5);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
             }
             break;
         case EAttackType::Skill:
-            P1Attack(1);
+            P1Attack(10);
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill"));
@@ -113,7 +113,11 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 
 void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
 {
-    P1ATK = P1AttackDamage;
+    if (GEngine)
+    {
+        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
+    }
 }
 
 // Called when the game starts or when spawned
