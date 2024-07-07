@@ -1,5 +1,6 @@
 #include "SecondCharacter.h"
 #include "Player2WeaponL.h"
+#include "Player2WeaponR.h"
 #include "EnhancedInputComponent.h"
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
@@ -26,7 +27,7 @@ void ASecondCharacter::BeginPlay()
     }
 
     // Set up right gun mesh component
-    P2WeaponR = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
+    P2WeaponR = GetWorld()->SpawnActor<APlayer2WeaponR>(FVector::ZeroVector, FRotator::ZeroRotator);
     if (P2WeaponR)
     {
         P2WeaponR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("RightHandSocket"));
