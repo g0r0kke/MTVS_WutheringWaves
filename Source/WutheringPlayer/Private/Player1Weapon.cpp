@@ -20,7 +20,7 @@ APlayer1Weapon::APlayer1Weapon()
 	// Box Collision 컴포넌트 등록 및 루트 컴포넌트로 설정
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	SetRootComponent(BoxComp);
-    BoxComp->SetBoxExtent(FVector(55, 55, 55));
+    BoxComp->SetBoxExtent(FVector(30, 30, 70));
 
     BoxComp->SetGenerateOverlapEvents(true);
     BoxComp->SetCollisionProfileName(TEXT("P1Weapon"));
