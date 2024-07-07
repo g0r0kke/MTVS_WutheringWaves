@@ -1,9 +1,11 @@
 #include "SecondCharacter.h"
 #include "Player2WeaponL.h"
+#include "Player2WeaponR.h"
 #include "EnhancedInputComponent.h"
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
 #include "Components/StaticMeshComponent.h"
+#include <ThirdParty/libJPG/jpge.h>
 
 // Sets default values
 ASecondCharacter::ASecondCharacter()
@@ -26,7 +28,7 @@ void ASecondCharacter::BeginPlay()
     }
 
     // Set up right gun mesh component
-    P2WeaponR = GetWorld()->SpawnActor<APlayer2WeaponL>(FVector::ZeroVector, FRotator::ZeroRotator);
+    P2WeaponR = GetWorld()->SpawnActor<APlayer2WeaponR>(FVector::ZeroVector, FRotator::ZeroRotator);
     if (P2WeaponR)
     {
         P2WeaponR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("RightHandSocket"));
@@ -138,6 +140,7 @@ void ASecondCharacter::LineTraceShoot(USceneComponent* GunMeshComponent, float S
     FVector End = ((ForwardVector * 5000.f * Strength) + Start); // End point: 5000 units forward * strength
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
+    CollisionParams.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams); // Execute line trace
 
