@@ -7,8 +7,6 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/Engine.h"
-//#include "GameFramework/GameModeBase.h"
-//#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayer1::APlayer1()
@@ -31,20 +29,19 @@ APlayer1::APlayer1()
         GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
     }
 
-    // TPS 카메라 붙이기
+    // Follow 카메라 붙이기
     // 3-1. SpringArm 컴포넌트 붙이기
-    springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
-    springArmComp->SetupAttachment(RootComponent);
-    springArmComp->SetRelativeLocation(FVector(0, 70, 90));
-    springArmComp->TargetArmLength = 400;
-    springArmComp->bUsePawnControlRotation = true;
-
+    CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+    CameraArm->SetupAttachment(RootComponent);
+    CameraArm->SetRelativeLocation(FVector(0, 0, 90));
+    CameraArm->TargetArmLength = 400;
+    CameraArm->bUsePawnControlRotation = true;
+    
     // 3-2. 카메라 컴포넌트 붙이기
-    tpsCamComp = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsCamComp"));
-    tpsCamComp->SetupAttachment(springArmComp);
-    tpsCamComp->bUsePawnControlRotation = false;
+    FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+    FollowCamera->SetupAttachment(CameraArm);
+    FollowCamera->bUsePawnControlRotation = false;
 
-    bUseControllerRotationYaw = true;
     IsDashing = false;
     IsMoving = false;
     bCanAttack = true; // 공격 가능 초기화
@@ -52,6 +49,14 @@ APlayer1::APlayer1()
 
     AttackStage = 0; // 공격 단계 초기화
     bIsStrongAttack = false; // 강한 공격 초기화
+
+    // 콤보공격 몽타주 추가
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> TempMontage(TEXT("/Script/Engine.AnimMontage'/Game/KHJ/Animations/Montages/AM_ComboAttack.AM_ComboAttack'"));
+
+    // 만약 로드가 성공했다면
+    if (TempMontage.Succeeded()) {
+        ComboActionMontage = TempMontage.Object;
+    }
 }
 
 // Called when the game starts or when spawned
@@ -93,6 +98,12 @@ void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
         PlayerInput->BindAction(inp_Attack, ETriggerEvent::Completed, this, &APlayer1::InputAttackStop);
         PlayerInput->BindAction(inp_Skill, ETriggerEvent::Started, this, &APlayer1::InputSkill);
     }
+}
+
+void APlayer1::ProcessComboCommand()
+{
+    UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
+    animInstance->Montage_Play(ComboActionMontage);
 }
 
 void APlayer1::Look(const FInputActionValue& InputValue)
@@ -139,11 +150,13 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
             DashDirection = FTransform(GetControlRotation()).TransformVector(direction).GetSafeNormal();
             // 플레이어가 이동 중인 방향으로 대쉬
             PerformDash(DashDirection, DashSpeed); // 로컬 좌표계에서 앞으로 대쉬
+            DisplayMessage("Dash");
         }
         else
         {
             // 플레이어가 이동 중이 아니면 뒤로 대쉬
             PerformDash(GetActorForwardVector(), -DashSpeed); // 로컬 좌표계에서 뒤로 대쉬
+            DisplayMessage("Avoid");
         }
 
         // Roll 메시지 출력 로직 추가
@@ -277,7 +290,7 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 
     // 콤보 타이머 재설정
     GetWorldTimerManager().ClearTimer(AttackComboTimer);
-    GetWorldTimerManager().SetTimer(AttackComboTimer, this, &APlayer1::ResetCombo, 0.5f, false);
+    GetWorldTimerManager().SetTimer(AttackComboTimer, this, &APlayer1::ResetCombo, 0.8f, false);
 }
 
 void APlayer1::InputAerialAttack()
@@ -337,12 +350,12 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
     UCharacterMovementComponent* CharMovement = GetCharacterMovement();
     if (CharMovement)
     {
-        CharMovement->BrakingFrictionFactor = 0.f;
-        LaunchCharacter(DashDirection * DashSpeed, true, true);
-        CharMovement->BrakingFrictionFactor = 2.f;
+		CharMovement->BrakingFrictionFactor = 0.f;
+		LaunchCharacter(DashDirection * DashSpeed, true, true);
+		CharMovement->BrakingFrictionFactor = 2.f;
 
-        FTimerHandle UnusedHandle;
-        GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &APlayer1::ResetDash, 0.5f, false);
     }
 }
 

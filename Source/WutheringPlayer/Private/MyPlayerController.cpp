@@ -10,6 +10,10 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "Player1.h"
+#include "FirstCharacter_1.h"
+#include "SecondCharacter.h"
+#include "Player1Weapon.h"
+#include "Player2WeaponL.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -101,38 +105,51 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 			P2Health = CurrentBaseCharacter->Health;
 		}
 	}
-  
+
 	// 현재 소유한 캐릭터의 무기를 찾아서 숨깁니다.
-	ACharacter* CurrentCharacter = Cast<ACharacter>(CurrentPlayerInstance);
-	if (CurrentCharacter)
+	APlayer1* CurrentCharacter = Cast<APlayer1>(CurrentPlayerInstance);
+	if (CurrentCharacter->IsA<AFirstCharacter_1>())
 	{
-		// 무기가 장착된 소켓 이름을 지정합니다.
-		FName WeaponSocketName(TEXT("LeftHandSocket")); // 소켓 이름을 문자열로 지정
-
-		// 무기를 소켓에서 찾아서 숨깁니다.
-		USkeletalMeshComponent* MeshComp = CurrentCharacter->GetMesh();
-		if (MeshComp)
+		AFirstCharacter_1* p1 = Cast<AFirstCharacter_1>(CurrentPlayerInstance);
+		if (p1->IsValidLowLevel() && p1->P1Weapon)
 		{
-			TArray<USceneComponent*> AttachedComponents;
-			MeshComp->GetChildrenComponents(true, AttachedComponents);
-
-			for (USceneComponent* Component : AttachedComponents)
-			{
-				if (Component && Component->GetAttachSocketName() == WeaponSocketName)
-				{
-					AActor* AttachedWeapon = Component->GetOwner();
-					if (AttachedWeapon)
-					{
-						AttachedWeapon->SetActorHiddenInGame(true);
-						AttachedWeapon->SetActorEnableCollision(false);
-						AttachedWeapon->SetActorTickEnabled(false);
-					}
-				}
-			}
+			p1->P1Weapon->SetActorHiddenInGame(true);
+			p1->P1Weapon->SetActorEnableCollision(false);
+			p1->P1Weapon->SetActorTickEnabled(false);
 		}
 	}
+	else if (CurrentCharacter->IsA<ASecondCharacter>())
+	{
+		ASecondCharacter* p2 = Cast<ASecondCharacter>(CurrentPlayerInstance);
+		if (p2->IsValidLowLevel() && p2->P2WeaponL)
+		{
+			p2->P2WeaponL->SetActorHiddenInGame(true);
+			p2->P2WeaponL->SetActorEnableCollision(false);
+			p2->P2WeaponL->SetActorTickEnabled(false);
+		}
+		else if (p2->IsValidLowLevel() && p2->P2WeaponR)
+		{
+			p2->P2WeaponR->SetActorHiddenInGame(true);
+			p2->P2WeaponR->SetActorEnableCollision(false);
+			p2->P2WeaponR->SetActorTickEnabled(false);
+		}
+	}
+	//else
+	//{
+	//	return;
+	//}
 
-	FTransform SpawnTransform = GetPawn()->GetActorTransform();
+	// 현재 위치에서 새로운 위치 계산
+	FVector CurrentLocation = GetPawn()->GetActorLocation();
+	FVector NewLocation = CurrentLocation;
+	NewLocation.X += 30.0f;
+	NewLocation.Y += 50.0f;
+
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(NewLocation);
+	SpawnTransform.SetRotation(GetPawn()->GetActorRotation().Quaternion());
+	SpawnTransform.SetScale3D(GetPawn()->GetActorScale3D());
+
 	APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
 	if (NewCharacter)
 	{
