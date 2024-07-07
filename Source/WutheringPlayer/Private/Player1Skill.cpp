@@ -65,6 +65,16 @@ void APlayer1Skill::BeginPlay()
 
 	// Player1Weapon 객체를 동적으로 생성
 	Player1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(APlayer1Weapon::StaticClass());
+
+	// Player1Weapon의 가시성과 콜리전 비활성화
+	if (Player1Weapon)
+	{
+		// 가시성 비활성화
+		Player1Weapon->SetActorHiddenInGame(true);
+
+		// 콜리전 비활성화
+		Player1Weapon->SetActorEnableCollision(false);
+	}
 }
 
 // Called every frame
