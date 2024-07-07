@@ -8,8 +8,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "SecondCharacter.generated.h"
-
-
+class ABullet;
 UCLASS()
 class WUTHERINGPLAYER_API ASecondCharacter : public APlayer1
 {
@@ -38,15 +37,15 @@ public:
 
 
 	// 라인 트레이스 발사 메서드
-	void LineTraceShoot(USceneComponent* GunComponent, float Strength = 1.0f);
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	void LineTraceShoot(USkeletalMeshComponent* GunComponent, const FName& SocketName, float Strength = 1.0f);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	class APlayer2WeaponL* P2WeaponL;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	class APlayer2WeaponR* P2WeaponR;
 	// 총알 공장
 	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
-	TSubclassOf<class ABullet>bulletFactroy;
+	TSubclassOf<class ABullet>bulletFactory;
 	//충돌 파편 공장 
 	UPROPERTY(EditAnywhere, Category=BulletEffect)
 	class UParticleSystem* bulletEffectFactory;
