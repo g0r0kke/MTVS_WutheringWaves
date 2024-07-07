@@ -25,19 +25,19 @@ APlayer1Weapon::APlayer1Weapon()
     BoxComp->SetGenerateOverlapEvents(true);
     BoxComp->SetCollisionProfileName(TEXT("P1Weapon"));
 
-	// 무기 스태틱메시 컴포넌트 등록
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("weaponMeshComp"));
+	// 무기 스켈레탈메시 컴포넌트 등록
+	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
 	// 부모 컴포넌트를 Mesh 컴포넌트로 설정
 	MeshComp->SetupAttachment(BoxComp);
     MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// 스태틱메시 데이터 로드
+	// 스켈레탈메시 데이터 로드
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempWeaponMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
 
 	// 데이터 로드가 성공했다면
 	if (TempWeaponMesh.Succeeded())
 	{
-		// 스태틱메시 데이터 할당
+		// 스켈레탈메시 데이터 할당
         MeshComp->SetSkeletalMesh(TempWeaponMesh.Object);
 		// 위치 조정하기
         MeshComp->SetRelativeLocation(FVector(0, 0, 0));
@@ -98,10 +98,10 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
             }
             break;
         case EAttackType::Skill:
-            P1Attack(10);
+            P1Attack(6);
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill"));
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
             }
             break;
         default:

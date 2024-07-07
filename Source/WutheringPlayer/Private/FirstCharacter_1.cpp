@@ -4,6 +4,7 @@
 #include "FirstCharacter_1.h"
 #include "Player1Weapon.h"
 #include "MyPlayerController.h"
+#include "Player1Skill.h"
 
 // Sets default values
 AFirstCharacter_1::AFirstCharacter_1()
@@ -50,7 +51,32 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 {
 	//Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
-	Super::PerformDash(GetActorForwardVector(), 2000.0f);
+	//Super::PerformDash(GetActorForwardVector(), 2000.0f);
+	
+	// 스킬 액터 스폰
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	FVector SpawnLocation = GetActorLocation();
+	FRotator SpawnRotation = FRotator::ZeroRotator;
+
+	if (!P1SkillFactory)
+	{
+		UE_LOG(LogTemp, Error, TEXT("P1SkillFactory is not set"));
+		return;
+	}
+
+	APlayer1Skill* SkillActor = GetWorld()->SpawnActor<APlayer1Skill>(P1SkillFactory, SpawnLocation, SpawnRotation, SpawnParams);
+	if (SkillActor)
+	{
+		// 스킬 액터가 캐릭터 주위를 돌도록 설정
+		SkillActor->InitOrbit(this);
+		UE_LOG(LogTemp, Warning, TEXT("Skill Actor spawned successfully"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to spawn Skill Actor"));
+	}
+
 	if (P1Weapon)
 	{
 		P1Weapon->WeaponAttack(EAttackType::Skill);
