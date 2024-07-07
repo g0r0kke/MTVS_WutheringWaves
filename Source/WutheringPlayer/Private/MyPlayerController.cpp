@@ -129,7 +129,7 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 			p2->P2WeaponL->SetActorTickEnabled(false);
 
 		}
-		else if (p2->IsValidLowLevel() && p2->P2WeaponR)
+		if (p2->IsValidLowLevel() && p2->P2WeaponR)
 		{
 			p2->P2WeaponR->SetActorHiddenInGame(true);
 			p2->P2WeaponR->SetActorEnableCollision(false);
