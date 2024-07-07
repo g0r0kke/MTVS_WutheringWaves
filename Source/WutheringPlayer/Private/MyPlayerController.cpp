@@ -13,6 +13,7 @@
 #include "FirstCharacter_1.h"
 #include "SecondCharacter.h"
 #include "Player1Weapon.h"
+#include "Player2WeaponL.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -117,14 +118,20 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 			p1->P1Weapon->SetActorTickEnabled(false);
 		}
 	}
-	else if (CurrentCharacter->IsA<AFirstCharacter_1>())
+	else if (CurrentCharacter->IsA<ASecondCharacter>())
 	{
-		AFirstCharacter_1* p2 = Cast<AFirstCharacter_1>(CurrentPlayerInstance);
-		if (p2->P1Weapon)
+		ASecondCharacter* p2 = Cast<ASecondCharacter>(CurrentPlayerInstance);
+		if (p2->IsValidLowLevel() && p2->P2WeaponL)
 		{
-			p2->P1Weapon->SetActorHiddenInGame(true);
-			p2->P1Weapon->SetActorEnableCollision(false);
-			p2->P1Weapon->SetActorTickEnabled(false);
+			p2->P2WeaponL->SetActorHiddenInGame(true);
+			p2->P2WeaponL->SetActorEnableCollision(false);
+			p2->P2WeaponL->SetActorTickEnabled(false);
+		}
+		else if (p2->IsValidLowLevel() && p2->P2WeaponR)
+		{
+			p2->P2WeaponR->SetActorHiddenInGame(true);
+			p2->P2WeaponR->SetActorEnableCollision(false);
+			p2->P2WeaponR->SetActorTickEnabled(false);
 		}
 	}
 	//else
@@ -132,7 +139,17 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 	//	return;
 	//}
 
-	FTransform SpawnTransform = GetPawn()->GetActorTransform();
+	// 현재 위치에서 새로운 위치 계산
+	FVector CurrentLocation = GetPawn()->GetActorLocation();
+	FVector NewLocation = CurrentLocation;
+	NewLocation.X += 30.0f;
+	NewLocation.Y += 50.0f;
+
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(NewLocation);
+	SpawnTransform.SetRotation(GetPawn()->GetActorRotation().Quaternion());
+	SpawnTransform.SetScale3D(GetPawn()->GetActorScale3D());
+
 	APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(NewCharacterClass, SpawnTransform);
 	if (NewCharacter)
 	{

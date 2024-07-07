@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Player1.h"
 #include "GameFramework/Character.h"
+#include "Player1Weapon.h"
 #include "FirstCharacter_1.generated.h"
 
 UCLASS()
@@ -19,6 +20,11 @@ public:
 	// P1Weapon 전역 변수 선언
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	class APlayer1Weapon* P1Weapon;
+
+	UPROPERTY(EditAnywhere)
+	//class UClass* BulletFactory;
+	class UClass* P1SkillFactory;
+	//TSubclassOf<class APlayer1Skill> P1SkillFactory;
 
 protected:
 	// Called when the game starts or when spawned
