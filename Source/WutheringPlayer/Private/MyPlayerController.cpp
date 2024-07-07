@@ -14,6 +14,7 @@
 #include "SecondCharacter.h"
 #include "Player1Weapon.h"
 #include "Player2WeaponL.h"
+#include "Player2WeaponR.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -126,6 +127,7 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 			p2->P2WeaponL->SetActorHiddenInGame(true);
 			p2->P2WeaponL->SetActorEnableCollision(false);
 			p2->P2WeaponL->SetActorTickEnabled(false);
+
 		}
 		else if (p2->IsValidLowLevel() && p2->P2WeaponR)
 		{
