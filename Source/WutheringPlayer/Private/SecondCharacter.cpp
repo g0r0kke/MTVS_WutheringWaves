@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
 #include "Components/StaticMeshComponent.h"
+#include <ThirdParty/libJPG/jpge.h>
 
 // Sets default values
 ASecondCharacter::ASecondCharacter()
@@ -139,6 +140,7 @@ void ASecondCharacter::LineTraceShoot(USceneComponent* GunMeshComponent, float S
     FVector End = ((ForwardVector * 5000.f * Strength) + Start); // End point: 5000 units forward * strength
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
+    CollisionParams.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams); // Execute line trace
 

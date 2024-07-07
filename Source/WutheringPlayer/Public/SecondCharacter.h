@@ -44,7 +44,14 @@ public:
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	class APlayer2WeaponR* P2WeaponR;
+	// 총알 공장
+	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
+	TSubclassOf<class ABullet>bulletFactroy;
+	//충돌 파편 공장 
+	UPROPERTY(EditAnywhere, Category=BulletEffect)
+	class UParticleSystem* bulletEffectFactory;
 
+	
 
 private:
 	//UPROPERTY(VisibleAnywhere, Category = "Components")
