@@ -144,8 +144,8 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 	// 현재 위치에서 새로운 위치 계산
 	FVector CurrentLocation = GetPawn()->GetActorLocation();
 	FVector NewLocation = CurrentLocation;
-	NewLocation.X += 30.0f;
-	NewLocation.Y += 50.0f;
+	//NewLocation.X += 30.0f;
+	//NewLocation.Y += 50.0f;
 
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(NewLocation);
