@@ -36,6 +36,10 @@ APlayer1::APlayer1()
     CameraArm->SetRelativeLocation(FVector(-30, 0, 70));
     CameraArm->TargetArmLength = 400;
     CameraArm->bUsePawnControlRotation = true;
+
+    //// 카메라 랙 설정
+    //CameraArm->bEnableCameraLag = true;
+    //CameraArm->CameraLagSpeed = 10.0f; // 적절한 값으로 설정
     
     // 3-2. 카메라 컴포넌트 붙이기
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
