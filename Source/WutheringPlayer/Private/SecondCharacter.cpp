@@ -4,8 +4,10 @@
 #include "EnhancedInputComponent.h"
 #include "DrawDebugHelpers.h"
 #include "TimerManager.h"
-#include "Components/StaticMeshComponent.h"
-#include <ThirdParty/libJPG/jpge.h>
+#include "Components/SkeletalMeshComponent.h" // 스켈레톤 메쉬 컴포넌트
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Bullet.h"
 
 // Sets default values
 ASecondCharacter::ASecondCharacter()
@@ -59,45 +61,89 @@ void ASecondCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void ASecondCharacter::PerformFirstAttack()
 {
     DisplayMessage("P2 First Attack!");
-    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+
+    if (P2WeaponL && P2WeaponL->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponL->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompL = P2WeaponL->GetMeshComponent();
+        FTransform FirePosition = MeshCompL->GetSocketTransform(TEXT("fireposition"));
+		GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+        
+        LineTraceShoot(MeshCompL,TEXT("fireposition"));
     }
 }
 
 void ASecondCharacter::PerformSecondAttack()
 {
     DisplayMessage("P2 Second Attack!");
-    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+    if (P2WeaponR && P2WeaponR->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponR->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompR = P2WeaponR->GetMeshComponent();
+        FTransform FirePosition = MeshCompR->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompR, TEXT("fireposition"));
     }
+
 }
 
 void ASecondCharacter::PerformThirdAttack()
 {
     DisplayMessage("P2 Third Attack!");
-    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+
+    if (P2WeaponL && P2WeaponL->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponL->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompL = P2WeaponL->GetMeshComponent();
+        FTransform FirePosition = MeshCompL->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompL, TEXT("fireposition"));
     }
-    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+
+
+    if (P2WeaponR && P2WeaponR->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponR->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompR = P2WeaponR->GetMeshComponent();
+        FTransform FirePosition = MeshCompR->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompR, TEXT("fireposition"));
     }
+
 }
 
 void ASecondCharacter::PerformFourthAttack()
 {
     DisplayMessage("P2 Fourth Attack!");
-    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+
+    if (P2WeaponL && P2WeaponL->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponL->GetMeshComponent(), 2.0f); // Strong attack
+        USkeletalMeshComponent* MeshCompL = P2WeaponL->GetMeshComponent();
+        FTransform FirePosition = MeshCompL->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompL, TEXT("fireposition"));
     }
-    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+
+
+    if (P2WeaponR && P2WeaponR->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponR->GetMeshComponent(), 2.0f); // Strong attack
+        USkeletalMeshComponent* MeshCompR = P2WeaponR->GetMeshComponent();
+        FTransform FirePosition = MeshCompR->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompR, TEXT("fireposition"));
     }
+
 }
 
 // Skill attack methods
@@ -116,18 +162,31 @@ void ASecondCharacter::StopSkill(const FInputActionValue& inputValue)
 
 void ASecondCharacter::AutoFire()
 {
-    if (P2WeaponL && P2WeaponL->GetMeshComponent()) // 널 체크 추가
+    if (P2WeaponL && P2WeaponL->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponL->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompL = P2WeaponL->GetMeshComponent();
+        FTransform FirePosition = MeshCompL->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompL, TEXT("fireposition"));
     }
-    if (P2WeaponR && P2WeaponR->GetMeshComponent()) // 널 체크 추가
+
+    if (P2WeaponR && P2WeaponR->GetMeshComponent())
     {
-        LineTraceShoot(P2WeaponR->GetMeshComponent());
+        USkeletalMeshComponent* MeshCompR = P2WeaponR->GetMeshComponent();
+        FTransform FirePosition = MeshCompR->GetSocketTransform(TEXT("fireposition"));
+
+
+        GetWorld()->SpawnActor<ABullet>(*bulletFactory, FirePosition);
+
+        LineTraceShoot(MeshCompR, TEXT("fireposition"));
     }
 }
 
 // Line trace shooting method
-void ASecondCharacter::LineTraceShoot(USceneComponent* GunMeshComponent, float Strength)
+void ASecondCharacter::LineTraceShoot(USkeletalMeshComponent* GunMeshComponent, const FName& SocketName, float Strength)
 {
     if (!GunMeshComponent)
     {
@@ -135,8 +194,8 @@ void ASecondCharacter::LineTraceShoot(USceneComponent* GunMeshComponent, float S
         return;
     }
 
-    FVector Start = GunMeshComponent->GetComponentLocation(); // Start point: gun mesh location
-    FVector ForwardVector = GetActorForwardVector(); // Character's forward vector
+    FVector Start = GunMeshComponent->GetSocketLocation(SocketName); // Start point: socket location
+    FVector ForwardVector = GunMeshComponent->GetSocketRotation(SocketName).Vector(); // Direction: socket rotation
     FVector End = ((ForwardVector * 5000.f * Strength) + Start); // End point: 5000 units forward * strength
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
