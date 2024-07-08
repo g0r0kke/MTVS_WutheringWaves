@@ -13,16 +13,13 @@ APlayer2WeaponL::APlayer2WeaponL(const FObjectInitializer& ObjectInitializer)
     // Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
-    // Box Collision 컴포넌트 등록 및 루트 컴포넌트로 설정
-
     // 무기 스태틱메시 컴포넌트 등록
     BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
     SetRootComponent(BoxComp);
-    BoxComp->SetBoxExtent(FVector(30, 30, 70));
+    BoxComp->SetBoxExtent(FVector(10 , 10, 10));
 
     BoxComp->SetGenerateOverlapEvents(true);
-    BoxComp->SetCollisionProfileName(TEXT("P2WeaponL"));
-
+    BoxComp->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 
     MeshCompL = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshCompL"));
     // 부모 컴포넌트를 Mesh 컴포넌트로 설정
