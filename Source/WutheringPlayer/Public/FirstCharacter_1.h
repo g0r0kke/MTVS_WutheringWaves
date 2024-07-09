@@ -17,15 +17,6 @@ public:
 	// Sets default values for this character's properties
 	AFirstCharacter_1();
 
-	// P1Weapon 전역 변수 선언
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
-	class APlayer1Weapon* P1Weapon;
-
-	UPROPERTY(EditAnywhere)
-	//class UClass* BulletFactory;
-	class UClass* P1SkillFactory;
-	//TSubclassOf<class APlayer1Skill> P1SkillFactory;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,4 +43,12 @@ public:
 	void AerialAttackStart();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
+
+	class APlayer1Weapon* P1Weapon;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class APlayer1Skill> P1SkillFactory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<class APlayer1Weapon> P1WeaponFactory;
 };
