@@ -11,15 +11,18 @@ UCLASS()
 class WUTHERINGPLAYER_API APlayer1Weapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APlayer1Weapon();
 
+	// 기본 씬 루트 컴포넌트 추가
+	UPROPERTY()
+	class USceneComponent* SceneComp;
 	// 무기 스켈레탈메시
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WeaponMesh)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponMesh)
 	class USkeletalMeshComponent* MeshComp;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* BoxComp;
 
@@ -29,23 +32,23 @@ public:
 	UFUNCTION()
 	void OnMyBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	 // WeaponAttack 함수 선언
-    UFUNCTION(Category = "PlayerAttack")
-    void WeaponAttack(EAttackType AttackType);
+	// WeaponAttack 함수 선언
+	UFUNCTION(Category = "PlayerAttack")
+	void WeaponAttack(EAttackType AttackType);
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 P1AttackDamage;
 
 	// P1Attack 함수 선언
-    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerAttack")
-    void P1Attack(int32 P1ATK);
-	virtual void P1Attack_Implementation(int32 P1ATK);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
+	void P1Attack(int32 P1ATK);
+	//virtual void P1Attack_Implementation(int32 P1ATK);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

@@ -13,23 +13,23 @@ APlayer1Weapon::APlayer1Weapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//// 기본 씬 컴포넌트 등록
-	//SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	//RootComponent = SceneComponent;
+	// 기본 씬 컴포넌트 등록
+	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
+	RootComponent = SceneComp;
 
-	// Box Collision 컴포넌트 등록 및 루트 컴포넌트로 설정
-	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
-	SetRootComponent(BoxComp);
+    // 무기 스켈레탈메시 컴포넌트 등록 및 SceneComponent에 부착
+    MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
+    MeshComp->SetupAttachment(SceneComp);
+    MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    // Box Collision 컴포넌트 등록 및 MeshComp에 부착
+    BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+    BoxComp->SetupAttachment(MeshComp);
     BoxComp->SetBoxExtent(FVector(30, 30, 70));
+    BoxComp->SetRelativeLocation(FVector(0, 0, 50));
 
     BoxComp->SetGenerateOverlapEvents(true);
     BoxComp->SetCollisionProfileName(TEXT("P1Weapon"));
-
-	// 무기 스켈레탈메시 컴포넌트 등록
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
-	// 부모 컴포넌트를 Mesh 컴포넌트로 설정
-	MeshComp->SetupAttachment(BoxComp);
-    MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// 스켈레탈메시 데이터 로드
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempWeaponMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
@@ -50,8 +50,8 @@ APlayer1Weapon::APlayer1Weapon()
 
 void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 {
-    // 충돌 변수 == true라면 attacktype 검사
-    if (bIsOverlapping == true)
+	// 충돌 변수 == true라면 attacktype 검사
+	if (bIsOverlapping == true)
     {
         switch (AttackType)
         {
@@ -64,17 +64,17 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
             break;
         case EAttackType::Attack2:
             P1Attack(2);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
-            }
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
+			}
             break;
         case EAttackType::Attack3:
             P1Attack(3);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
-            }
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
+			}
             break;
         case EAttackType::Attack4:
             P1Attack(4);
@@ -111,14 +111,14 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
     }
 }
 
-void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
-{
-    if (GEngine)
-    {
-        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
-    }
-}
+//void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
+//{
+//    if (GEngine)
+//    {
+//        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
+//        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
+//    }
+//}
 
 // Called when the game starts or when spawned
 void APlayer1Weapon::BeginPlay()
