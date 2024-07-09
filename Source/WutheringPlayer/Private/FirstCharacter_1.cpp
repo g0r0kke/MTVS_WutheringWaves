@@ -22,15 +22,22 @@ void AFirstCharacter_1::BeginPlay()
 	Health = 5;
 
 	FName WeaponSocket(TEXT("LeftHandSocket"));
-	P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory);
 	if (nullptr != P1Weapon)
 	{
 		P1Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+	}
+
 	//FName WeaponSocket(TEXT("LeftHandSocket"));
-	//auto CurWeapon = GetWorld()->SpawnActor<APlayer1Weapon>(FVector::ZeroVector, FRotator::ZeroRotator);
-	//if (nullptr != CurWeapon)
-	//	CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
+	//P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	//if (nullptr != P1Weapon)
+	//{
+	//	P1Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
+	//}
 }
 
 // Called every frame
@@ -52,7 +59,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	//Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
 	//Super::PerformDash(GetActorForwardVector(), 2000.0f);
-	
+
 	// 스킬 액터 스폰
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;

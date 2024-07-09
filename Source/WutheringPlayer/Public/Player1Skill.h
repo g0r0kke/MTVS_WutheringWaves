@@ -59,5 +59,8 @@ private:
 
 	bool bIsOverlapping;
 
-	APlayer1Weapon* Player1Weapon;
+	class APlayer1Weapon* P1Weapon;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class APlayer1Weapon> P1WeaponFactory;
 };
