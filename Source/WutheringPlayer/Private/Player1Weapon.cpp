@@ -57,52 +57,52 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
         {
         case EAttackType::Attack1:
             P1Attack(1);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FirstAttack"));
-            }
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FirstAttack"));
+            //}
             break;
         case EAttackType::Attack2:
             P1Attack(2);
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
-			}
+			//if (GEngine)
+			//{
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
+			//}
             break;
         case EAttackType::Attack3:
             P1Attack(3);
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
-			}
+			//if (GEngine)
+			//{
+			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
+			//}
             break;
         case EAttackType::Attack4:
             P1Attack(4);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FourthAttack"));
-            }
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FourthAttack"));
+            //}
             break;
         case EAttackType::StrongAttack:
             P1Attack(5);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Strong Attack"));
-            }
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Strong Attack"));
+            //}
             break;
         case EAttackType::AerialAttack:
             P1Attack(5);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
-            }
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
+            //}
             break;
         case EAttackType::Skill:
             P1Attack(6);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
-            }
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
+            //}
             break;
         default:
             // 예외 처리
