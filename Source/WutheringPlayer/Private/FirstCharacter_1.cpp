@@ -19,7 +19,7 @@ void AFirstCharacter_1::BeginPlay()
 	Super::BeginPlay();
 
 	// 초기 체력 설정
-	Health = 5;
+	Health = 1219;
 
 	FName WeaponSocket(TEXT("LeftHandSocket"));
 	P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory);
@@ -77,7 +77,6 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	{
 		// 스킬 액터가 캐릭터 주위를 돌도록 설정
 		SkillActor->InitOrbit(this);
-		UE_LOG(LogTemp, Warning, TEXT("Skill Actor spawned successfully"));
 	}
 	else
 	{

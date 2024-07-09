@@ -58,24 +58,23 @@ APlayer1Skill::APlayer1Skill()
 void APlayer1Skill::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Player1Skill has been initialized"));
 
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &APlayer1Skill::OnMySphereBeginOverlap);
 	SphereComp->OnComponentEndOverlap.AddDynamic(this, &APlayer1Skill::OnMySphereEndOverlap);
 
-	// Player1Weapon 객체를 동적으로 생성
-	//Player1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(APlayer1Weapon::StaticClass());
-	P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory);
+	//// Player1Weapon 객체를 동적으로 생성
+	////Player1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(APlayer1Weapon::StaticClass());
+	//P1Weapon2 = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory2);
 
-	// Player1Weapon의 가시성과 콜리전 비활성화
-	if (P1Weapon)
-	{
-		// 가시성 비활성화
-		P1Weapon->SetActorHiddenInGame(true);
+	//// Player1Weapon의 가시성과 콜리전 비활성화
+	//if (P1Weapon2)
+	//{
+	//	// 가시성 비활성화
+	//	P1Weapon2->MeshComp->SetVisibility(false);
 
-		// 콜리전 비활성화
-		P1Weapon->SetActorEnableCollision(false);
-	}
+	//	// 콜리전 비활성화
+	//	P1Weapon2->SetActorEnableCollision(false);
+	//}
 
 
 }
@@ -116,7 +115,17 @@ void APlayer1Skill::Tick(float DeltaTime)
 
 	if (bIsOverlapping == true)
 	{
-		P1Weapon->P1Attack(10);  // P1Attack 함수 호출
+		//if (P1Weapon2)
+		//{
+			//UE_LOG(LogTemp, Warning, TEXT("P1Weapon is set"));
+			//P1Weapon2->WeaponAttack(EAttackType::SkillDmg);
+			OrbitingCharacter->P1Weapon->WeaponAttack(EAttackType::SkillDmg);
+		//}
+		//else
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+		//}
+		//P1Weapon2->P1Attack(10);  // P1Attack 함수 호출
 		//if (GEngine)
 		//{
 		//	FString DamageStr = FString::Printf(TEXT("P1 Skill-Plate"));
