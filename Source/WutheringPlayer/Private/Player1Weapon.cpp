@@ -50,55 +50,42 @@ APlayer1Weapon::APlayer1Weapon()
 
 void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 {
-	// 충돌 변수 == true라면 attacktype 검사
-	if (bIsOverlapping == true)
+    if (AttackType == EAttackType::SkillDmg)
     {
+        UE_LOG(LogTemp, Warning, TEXT("skill attack"));
+        P1Attack(10);
+        // 플레이어->보스 이벤트 전달 안 됨
+    }
+	// 충돌 변수 == true라면 attacktype 검사
+    if (bIsOverlapping == true)
+    {
+        //UE_LOG(LogTemp, Warning, TEXT("WeaponAttack"));
         switch (AttackType)
         {
         case EAttackType::Attack1:
-            P1Attack(1);
-            //if (GEngine)
-            //{
-            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FirstAttack"));
-            //}
+            P1Attack(75);
             break;
         case EAttackType::Attack2:
-            P1Attack(2);
-			//if (GEngine)
-			//{
-			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
-			//}
+            P1Attack(75);
             break;
         case EAttackType::Attack3:
-            P1Attack(3);
-			//if (GEngine)
-			//{
-			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
-			//}
+            P1Attack(75);
             break;
         case EAttackType::Attack4:
-            P1Attack(4);
-            //if (GEngine)
-            //{
-            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FourthAttack"));
-            //}
+            P1Attack(75);
             break;
         case EAttackType::StrongAttack:
-            P1Attack(5);
-            //if (GEngine)
-            //{
-            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Strong Attack"));
-            //}
+            P1Attack(90);
             break;
         case EAttackType::AerialAttack:
-            P1Attack(5);
+            P1Attack(80);
             //if (GEngine)
             //{
             //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
             //}
             break;
         case EAttackType::Skill:
-            P1Attack(6);
+            P1Attack(75);
             //if (GEngine)
             //{
             //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
@@ -144,8 +131,11 @@ void APlayer1Weapon::OnMyBoxBeginOverlap(UPrimitiveComponent* OverlappedComponen
         ACharacter* Character = Cast<ACharacter>(OtherActor);
         if (Character)
         {
+            //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxBeginOverlap"));
             bIsOverlapping = true;  // 충돌 변수 설정
             // 추가 로직 작성
+
+            // 콤보, 데미지 계산
         }
     }
 }
@@ -156,6 +146,7 @@ void APlayer1Weapon::OnMyBoxEndOverlap(UPrimitiveComponent* OverlappedComponent,
         ACharacter* Character = Cast<ACharacter>(OtherActor);
         if (Character)
         {
+            //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxEndOverlap"));
             bIsOverlapping = false;  // 충돌 변수 해제
             // 추가 로직 작성
         }
