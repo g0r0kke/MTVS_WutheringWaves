@@ -267,11 +267,11 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
     switch (AttackStage)
     {
     case 0:
-        PerformFirstAttack();
+        //PerformFirstAttack();
         Attack1Start();
         break;
     case 1:
-        PerformSecondAttack();
+        //PerformSecondAttack();
         Attack2Start();
         break;
     case 2:

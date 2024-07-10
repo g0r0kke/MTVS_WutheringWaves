@@ -24,5 +24,6 @@ enum class EAttackType : uint8
     Attack4 UMETA(DisplayName = "FourthAttack"),
     StrongAttack UMETA(DisplayName = "Strong Attack"),
     AerialAttack UMETA(DisplayName = "Aerial Attack"),
-    Skill UMETA(DisplayName = "Skill")
+    Skill UMETA(DisplayName = "Skill"),
+    SkillDmg UMETA(DisplayName = "Skill Damage")
 };

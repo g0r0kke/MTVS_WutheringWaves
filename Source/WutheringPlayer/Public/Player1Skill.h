@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Player1Weapon.h"
 #include "Player1Skill.generated.h"
 
 class AFirstCharacter_1;
@@ -59,5 +60,8 @@ private:
 
 	bool bIsOverlapping;
 
-	APlayer1Weapon* Player1Weapon;
+	//class APlayer1Weapon* P1Weapon2;
+
+	//UPROPERTY(EditAnywhere)
+	//TSubclassOf<class APlayer1Weapon> P1WeaponFactory2;
 };

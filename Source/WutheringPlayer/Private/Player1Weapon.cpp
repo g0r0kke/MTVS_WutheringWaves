@@ -13,23 +13,23 @@ APlayer1Weapon::APlayer1Weapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//// 기본 씬 컴포넌트 등록
-	//SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	//RootComponent = SceneComponent;
+	// 기본 씬 컴포넌트 등록
+	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
+	RootComponent = SceneComp;
 
-	// Box Collision 컴포넌트 등록 및 루트 컴포넌트로 설정
-	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
-	SetRootComponent(BoxComp);
+    // 무기 스켈레탈메시 컴포넌트 등록 및 SceneComponent에 부착
+    MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
+    MeshComp->SetupAttachment(SceneComp);
+    MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    // Box Collision 컴포넌트 등록 및 MeshComp에 부착
+    BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+    BoxComp->SetupAttachment(MeshComp);
     BoxComp->SetBoxExtent(FVector(30, 30, 70));
+    BoxComp->SetRelativeLocation(FVector(0, 0, 50));
 
     BoxComp->SetGenerateOverlapEvents(true);
     BoxComp->SetCollisionProfileName(TEXT("P1Weapon"));
-
-	// 무기 스켈레탈메시 컴포넌트 등록
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMeshComp"));
-	// 부모 컴포넌트를 Mesh 컴포넌트로 설정
-	MeshComp->SetupAttachment(BoxComp);
-    MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// 스켈레탈메시 데이터 로드
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> TempWeaponMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
@@ -50,59 +50,46 @@ APlayer1Weapon::APlayer1Weapon()
 
 void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 {
-    // 충돌 변수 == true라면 attacktype 검사
+    if (AttackType == EAttackType::SkillDmg)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("skill attack"));
+        P1Attack(10);
+        // 플레이어->보스 이벤트 전달 안 됨
+    }
+	// 충돌 변수 == true라면 attacktype 검사
     if (bIsOverlapping == true)
     {
+        //UE_LOG(LogTemp, Warning, TEXT("WeaponAttack"));
         switch (AttackType)
         {
         case EAttackType::Attack1:
-            P1Attack(1);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FirstAttack"));
-            }
+            P1Attack(75);
             break;
         case EAttackType::Attack2:
-            P1Attack(2);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 SecondAttack"));
-            }
+            P1Attack(75);
             break;
         case EAttackType::Attack3:
-            P1Attack(3);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 ThirdAttack"));
-            }
+            P1Attack(75);
             break;
         case EAttackType::Attack4:
-            P1Attack(4);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 FourthAttack"));
-            }
+            P1Attack(75);
             break;
         case EAttackType::StrongAttack:
-            P1Attack(5);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Strong Attack"));
-            }
+            P1Attack(90);
             break;
         case EAttackType::AerialAttack:
-            P1Attack(5);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
-            }
+            P1Attack(80);
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
+            //}
             break;
         case EAttackType::Skill:
-            P1Attack(6);
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
-            }
+            P1Attack(75);
+            //if (GEngine)
+            //{
+            //    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
+            //}
             break;
         default:
             // 예외 처리
@@ -111,14 +98,14 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
     }
 }
 
-void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
-{
-    if (GEngine)
-    {
-        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
-    }
-}
+//void APlayer1Weapon::P1Attack_Implementation(int32 P1ATK)
+//{
+//    if (GEngine)
+//    {
+//        FString DamageStr = FString::Printf(TEXT("P1ATK: %d"), P1ATK);
+//        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
+//    }
+//}
 
 // Called when the game starts or when spawned
 void APlayer1Weapon::BeginPlay()
@@ -144,8 +131,11 @@ void APlayer1Weapon::OnMyBoxBeginOverlap(UPrimitiveComponent* OverlappedComponen
         ACharacter* Character = Cast<ACharacter>(OtherActor);
         if (Character)
         {
+            //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxBeginOverlap"));
             bIsOverlapping = true;  // 충돌 변수 설정
             // 추가 로직 작성
+
+            // 콤보, 데미지 계산
         }
     }
 }
@@ -156,6 +146,7 @@ void APlayer1Weapon::OnMyBoxEndOverlap(UPrimitiveComponent* OverlappedComponent,
         ACharacter* Character = Cast<ACharacter>(OtherActor);
         if (Character)
         {
+            //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxEndOverlap"));
             bIsOverlapping = false;  // 충돌 변수 해제
             // 추가 로직 작성
         }

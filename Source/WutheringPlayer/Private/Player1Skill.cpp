@@ -50,31 +50,33 @@ APlayer1Skill::APlayer1Skill()
 	Speed = 270.0f;  // 기본 회전 속도 설정
 	Angle = 0.0f;    // 초기 각도 설정
 
-	// APlayer1Weapon 객체의 인스턴스 생성
-	Player1Weapon = CreateDefaultSubobject<APlayer1Weapon>(TEXT("Player1Weapon"));
+	//// APlayer1Weapon 객체의 인스턴스 생성
+	//Player1Weapon = CreateDefaultSubobject<APlayer1Weapon>(TEXT("Player1Weapon"));
 }
 
 // Called when the game starts or when spawned
 void APlayer1Skill::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Player1Skill has been initialized"));
 
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &APlayer1Skill::OnMySphereBeginOverlap);
 	SphereComp->OnComponentEndOverlap.AddDynamic(this, &APlayer1Skill::OnMySphereEndOverlap);
 
-	// Player1Weapon 객체를 동적으로 생성
-	Player1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(APlayer1Weapon::StaticClass());
+	//// Player1Weapon 객체를 동적으로 생성
+	////Player1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(APlayer1Weapon::StaticClass());
+	//P1Weapon2 = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory2);
 
-	// Player1Weapon의 가시성과 콜리전 비활성화
-	if (Player1Weapon)
-	{
-		// 가시성 비활성화
-		Player1Weapon->SetActorHiddenInGame(true);
+	//// Player1Weapon의 가시성과 콜리전 비활성화
+	//if (P1Weapon2)
+	//{
+	//	// 가시성 비활성화
+	//	P1Weapon2->MeshComp->SetVisibility(false);
 
-		// 콜리전 비활성화
-		Player1Weapon->SetActorEnableCollision(false);
-	}
+	//	// 콜리전 비활성화
+	//	P1Weapon2->SetActorEnableCollision(false);
+	//}
+
+
 }
 
 // Called every frame
@@ -113,12 +115,22 @@ void APlayer1Skill::Tick(float DeltaTime)
 
 	if (bIsOverlapping == true)
 	{
-		Player1Weapon->P1Attack(10);  // P1Attack 함수 호출
-		if (GEngine)
-		{
-			FString DamageStr = FString::Printf(TEXT("P1 Skill-Plate"));
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
-		}
+		//if (P1Weapon2)
+		//{
+			//UE_LOG(LogTemp, Warning, TEXT("P1Weapon is set"));
+			//P1Weapon2->WeaponAttack(EAttackType::SkillDmg);
+			OrbitingCharacter->P1Weapon->WeaponAttack(EAttackType::SkillDmg);
+		//}
+		//else
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+		//}
+		//P1Weapon2->P1Attack(10);  // P1Attack 함수 호출
+		//if (GEngine)
+		//{
+		//	FString DamageStr = FString::Printf(TEXT("P1 Skill-Plate"));
+		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, DamageStr);
+		//}
 	}
 }
 
@@ -135,7 +147,7 @@ void APlayer1Skill::OnMySphereBeginOverlap(UPrimitiveComponent* OverlappedCompon
 		if (Character)
 		{
 			bIsOverlapping = true;  // 충돌 변수 설정
-			Player1Weapon->P1Attack(10);
+			//P1Weapon->P1Attack(10);
 			// 추가 로직 작성
 		}
 	}
