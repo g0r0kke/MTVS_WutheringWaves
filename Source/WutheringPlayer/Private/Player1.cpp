@@ -15,7 +15,7 @@ APlayer1::APlayer1()
     PrimaryActorTick.bCanEverTick = true;
 
     // 초기 체력 설정
-    Health = 100;
+    HP = 100;
     bIsAlive = true;
 
     // 1. SkeletalMesh 로드
@@ -146,6 +146,8 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
 {
     if (InputValue.Get<float>() > 0 && !IsDashing)
     {
+         //HideWeapon();
+        
         IsDashing = true;
         float DashSpeed = 1200.0f; // 속도값 조정
         if (IsMoving)
@@ -363,19 +365,21 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
     }
 }
 
-void APlayer1::DecreaseHealth(int32 Damage)
+void APlayer1::OnHitEvent(int32 Damage)
 {
-    if (!bIsAlive)
-    {
-        return;
-    }
+    DisplayMessage("Damaged!!!!!");
+    HP--;
+	if (!bIsAlive)
+	{
+		return;
+	}
 
-    Health -= Damage;
+	HP -= Damage;
 
-    if (Health <= 0)
-    {
-        Die();
-    }
+	if (HP <= 0)
+	{
+		Die();
+	}
 }
 
 void APlayer1::Die()
@@ -384,3 +388,15 @@ void APlayer1::Die()
     DisplayMessage(TEXT("You Died!"), 5.0f);
 }
 
+//void APlayer1::HideWeapon()
+//{
+//    // HideWeapon 함수의 로직을 추가하세요
+//    if (P1Weapon)
+//    {
+//        P1Weapon->MeshComp->SetVisibility(false);
+//    }
+//    else
+//    {
+//        UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
+//    } 
+//}
