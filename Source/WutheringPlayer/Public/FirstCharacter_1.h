@@ -46,16 +46,9 @@ public:
 
 	class APlayer1Weapon* P1Weapon;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class APlayer1Skill> P1SkillFactory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class APlayer1Weapon> P1WeaponFactory;
-
-	UFUNCTION()
-    void OnBossAttackEnd();  // 이 함수가 이벤트 디스패처로 호출될 함수입니다
-
-	// BP_Boss 블루프린트 참조를 저장할 변수
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss")
-	ACharacter* BossCharacter;
 };
