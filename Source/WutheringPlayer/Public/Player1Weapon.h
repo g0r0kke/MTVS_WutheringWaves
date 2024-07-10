@@ -52,11 +52,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss")
+	TSubclassOf<class ACharacter> BossInstance;
+
 	//UFUNCTION(BlueprintImplementableEvent, Category = "PlayerAttack")
 	//void OnP1Attack(int32 P1ATK);
 
 private:
 	bool bIsOverlapping;
+
 	//// ±âº» ¾À ·çÆ® ÄÄÆ÷³ÍÆ®
 	//UPROPERTY()
 	//class USceneComponent* SceneComponent;

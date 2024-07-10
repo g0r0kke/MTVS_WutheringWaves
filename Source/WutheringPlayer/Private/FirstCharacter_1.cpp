@@ -39,26 +39,6 @@ void AFirstCharacter_1::BeginPlay()
 	//{
 	//	P1Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 	//}
-
-	// BP_Boss 블루프린트의 캐릭터를 찾아서 저장
-	if (BossCharacter)
-	{
-		UFunction* Function = BossCharacter->FindFunction(TEXT("OnAttackEnd"));
-		if (Function)
-		{
-			FScriptDelegate Delegate;
-			Delegate.BindUFunction(this, "OnBossAttackEnd");
-			BossCharacter->ProcessEvent(Function, &Delegate);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("OnAttackEnd function not found on BossCharacter"));
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BossCharacter is not set"));
-	}
 }
 
 // Called every frame
@@ -212,14 +192,5 @@ void AFirstCharacter_1::Die()
 	{
 		PC->bIsP1Alive = false;
 		PC->SwitchToCharacter(PC->BP_P2); // 캐릭터 2로 전환
-	}
-}
-
-void AFirstCharacter_1::OnBossAttackEnd()
-{
-	// "공격 받음" 메시지를 화면에 출력합니다.
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("공격 받음"));
 	}
 }
