@@ -16,6 +16,8 @@ public:
 	bool IsJumping; // 점프 상태 추적
 	bool IsDashing; // 대쉬 상태 추적
 
+	//void HideWeapon();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -81,7 +83,7 @@ public:
 
 	// 플레이어 체력
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	int32 Health;
+	int32 HP;
 
 	// 생존 여부
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
@@ -89,10 +91,12 @@ public:
 
 	// 체력 감소 함수
 	UFUNCTION(BlueprintCallable, Category = "Health")
-	void DecreaseHealth(int32 Damage);
+	void OnHitEvent(int32 Damage);
 
 	// 사망 처리 함수
 	virtual void Die();
+
+	//class AFirstCharacter_1* P1Weapon;
 
 protected:
 	FTimerHandle TimerHandle_RollMessage;
@@ -135,4 +139,5 @@ protected:
 	void Attack3Start();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack4Start();
+
 };

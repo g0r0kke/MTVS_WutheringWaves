@@ -25,7 +25,7 @@ AMyPlayerController::AMyPlayerController()
 		BP_P1 = Player1BP.Class;
 		UE_LOG(LogTemp, Warning, TEXT("BP_P1 loaded successfully"));
 		bIsP1Alive = true;
-		P1Health = 6; // 초기 체력 설정
+		P1HP = 1219; // 초기 체력 설정
 	}
 
 	static ConstructorHelpers::FClassFinder<APawn> Player2BP(TEXT("/Script/Engine.Blueprint'/Game/KHJ/Blueprints/BP_P2.BP_P2_C'"));
@@ -34,7 +34,7 @@ AMyPlayerController::AMyPlayerController()
 		BP_P2 = Player2BP.Class;
 		UE_LOG(LogTemp, Warning, TEXT("BP_P2 loaded successfully"));
 		bIsP2Alive = true;
-		P2Health = 10; // 초기 체력 설정
+		P2HP = 10; // 초기 체력 설정
 	}
 }
 
@@ -99,11 +99,11 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 	{
 		if (CurrentBaseCharacter->GetClass() == BP_P1)
 		{
-			P1Health = CurrentBaseCharacter->Health;
+			P1HP = CurrentBaseCharacter->HP;
 		}
 		else if (CurrentBaseCharacter->GetClass() == BP_P2)
 		{
-			P2Health = CurrentBaseCharacter->Health;
+			P2HP = CurrentBaseCharacter->HP;
 		}
 	}
 
@@ -161,11 +161,11 @@ void AMyPlayerController::SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass
 		{
 			if (NewCharacterClass == BP_P1)
 			{
-				NewBaseCharacter->Health = P1Health;
+				NewBaseCharacter->HP = P1HP;
 			}
 			else if (NewCharacterClass == BP_P2)
 			{
-				NewBaseCharacter->Health = P2Health;
+				NewBaseCharacter->HP = P2HP;
 			}
 		}
 

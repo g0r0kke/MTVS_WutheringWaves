@@ -41,8 +41,8 @@ public:
 	bool bIsP2Alive;
 
 	// 캐릭터 체력 저장
-	int32 P1Health;
-	int32 P2Health;
+	int32 P1HP;
+	int32 P2HP;
 
 	void SwitchToCharacter(TSubclassOf<APawn> NewCharacterClass);
 

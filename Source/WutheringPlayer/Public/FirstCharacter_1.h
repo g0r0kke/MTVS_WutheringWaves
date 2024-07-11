@@ -44,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
 
+	//void HideWeapon();
+
 	class APlayer1Weapon* P1Weapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
