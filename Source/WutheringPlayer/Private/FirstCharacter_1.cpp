@@ -22,6 +22,8 @@ void AFirstCharacter_1::BeginPlay()
 	// 초기 체력 설정
 	HP = 1219;
 
+	bIsAttack = false;
+
 	//p1 = this;
 
 	FName WeaponSocket(TEXT("LeftHandSocket"));
@@ -91,6 +93,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	if (P1Weapon)
 	{
 		P1Weapon->WeaponAttack(EAttackType::Skill);
+		bIsAttack = true;
 	}
 	else
 	{
