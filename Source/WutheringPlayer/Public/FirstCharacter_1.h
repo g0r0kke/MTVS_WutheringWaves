@@ -53,4 +53,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class APlayer1Weapon> P1WeaponFactory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsAttack;
 };
