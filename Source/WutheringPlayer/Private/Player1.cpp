@@ -163,6 +163,7 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
             // 플레이어가 이동 중이 아니면 뒤로 대쉬
             PerformDash(GetActorForwardVector(), -DashSpeed); // 로컬 좌표계에서 뒤로 대쉬
             DisplayMessage("Avoid");
+            JustAvoidStart();
         }
 
         // Roll 메시지 출력 로직 추가

@@ -97,6 +97,8 @@ public:
 	virtual void Die();
 
 	//class AFirstCharacter_1* P1Weapon;
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void JustAvoidStart();
 
 protected:
 	FTimerHandle TimerHandle_RollMessage;
