@@ -21,6 +21,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Find the closest boss to target
+	ACharacter* FindClosestBoss();
+
+	// Rotate towards the closest boss
+	void RotateTowardsClosestBoss();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,7 +49,7 @@ public:
 	void AerialAttackStart();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Status")
 	void P1Death();
 
 	//void HideWeapon();
@@ -58,4 +64,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss")
+	TSubclassOf<class ACharacter> BossFactory;
 };
