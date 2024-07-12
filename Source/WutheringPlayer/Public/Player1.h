@@ -15,7 +15,6 @@ public:
 	bool IsMoving; // 움직임 상태 추적
 	bool IsJumping; // 점프 상태 추적
 	bool IsDashing; // 대쉬 상태 추적
-
 	//void HideWeapon();
 
 protected:
@@ -145,5 +144,8 @@ protected:
 	void Roll1Start();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Status")
 	void Roll2Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Status")
+	void DashStart();
 
+	void MoveComplete();
 };
