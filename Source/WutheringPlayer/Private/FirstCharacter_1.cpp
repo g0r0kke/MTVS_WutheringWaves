@@ -6,6 +6,7 @@
 #include "MyPlayerController.h"
 #include "Player1Skill.h"
 #include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h" // TActorIterator 사용을 위해 추가
 
 // Sets default values
 AFirstCharacter_1::AFirstCharacter_1()
@@ -60,8 +61,40 @@ void AFirstCharacter_1::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
+ACharacter* AFirstCharacter_1::FindClosestBoss()
+{
+	ACharacter* ClosestBoss = nullptr;
+	float MinDistance = FLT_MAX;
+
+	for (TActorIterator<ACharacter> It(GetWorld()); It; ++It)
+	{
+		if (It->IsA(BossFactory))
+		{
+			float Distance = FVector::Dist(GetActorLocation(), It->GetActorLocation());
+			if (Distance < MinDistance)
+			{
+				MinDistance = Distance;
+				ClosestBoss = *It;
+			}
+		}
+	}
+
+	return ClosestBoss;
+}
+
+void AFirstCharacter_1::RotateTowardsClosestBoss()
+{
+	ACharacter* ClosestBoss = FindClosestBoss();
+	if (ClosestBoss)
+	{
+		FRotator NewRotation = (ClosestBoss->GetActorLocation() - GetActorLocation()).Rotation();
+		SetActorRotation(NewRotation);
+	}
+}
+
 void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
@@ -103,6 +136,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 
 void AFirstCharacter_1::InputAerialAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Aerial Attack!");
 	Super::bAerialAttack = true; // 공중 공격 상태 설정
@@ -121,6 +155,7 @@ void AFirstCharacter_1::InputAerialAttack()
 
 void AFirstCharacter_1::PerformStrongAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	Super::bIsStrongAttack = true;
 	//Super::DisplayMessage("P1 Strong Attack!");
@@ -137,6 +172,7 @@ void AFirstCharacter_1::PerformStrongAttack()
 
 void AFirstCharacter_1::PerformFirstAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 First Attack!");
 	//Super::PerformDash(GetActorForwardVector(), 1100.0f);
@@ -152,6 +188,7 @@ void AFirstCharacter_1::PerformFirstAttack()
 
 void AFirstCharacter_1::PerformSecondAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Second Attack!");
 	if (P1Weapon)
@@ -167,6 +204,7 @@ void AFirstCharacter_1::PerformSecondAttack()
 
 void AFirstCharacter_1::PerformThirdAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Third Attack!");
 	if (P1Weapon)
@@ -182,6 +220,7 @@ void AFirstCharacter_1::PerformThirdAttack()
 
 void AFirstCharacter_1::PerformFourthAttack()
 {
+	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Fourth Attack!");
 	if (P1Weapon)

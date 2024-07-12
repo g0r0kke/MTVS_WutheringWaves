@@ -169,10 +169,12 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
         // Roll 메시지 출력 로직 추가
         if (IsJumping && IsMoving)
         {
+            Roll1Start();
             PerformRoll(true); // ROLL1
         }
         else if (IsJumping)
         {
+            Roll2Start();
             PerformRoll(false); // ROLL2
         }
     }
