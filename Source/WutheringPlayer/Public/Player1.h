@@ -141,5 +141,9 @@ protected:
 	void Attack3Start();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "PlayerAttack")
 	void Attack4Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Status")
+	void Roll1Start();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Status")
+	void Roll2Start();
 
 };
