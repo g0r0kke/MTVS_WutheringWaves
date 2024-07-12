@@ -199,13 +199,14 @@ void AFirstCharacter_1::Die()
 {
 	// 사망 메시지 표시
 	DisplayMessage(TEXT("P1 Died!"), 5.0f);
-	// 캐릭터 1이 죽었음을 설정
-	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
-	if (PC)
-	{
-		PC->bIsP1Alive = false;
-		PC->SwitchToCharacter(PC->BP_P2); // 캐릭터 2로 전환
-	}
+	P1Death();
+	//// 캐릭터 1이 죽었음을 설정
+	//AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
+	//if (PC)
+	//{
+	//	PC->bIsP1Alive = false;
+	//	PC->SwitchToCharacter(PC->BP_P2); // 캐릭터 2로 전환
+	//}
 }
 
 //void AFirstCharacter_1::HideWeapon()

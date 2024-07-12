@@ -43,6 +43,8 @@ public:
 	void AerialAttackStart();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
+	void P1Death();
 
 	//void HideWeapon();
 

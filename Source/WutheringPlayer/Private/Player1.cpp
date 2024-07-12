@@ -379,6 +379,7 @@ void APlayer1::OnHitEvent(int32 Damage)
 
 	if (HP <= 0)
 	{
+        HP = 0;
 		Die();
 	}
 }
