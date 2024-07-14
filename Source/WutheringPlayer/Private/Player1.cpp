@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // Sets default values
 APlayer1::APlayer1()
@@ -44,7 +46,7 @@ APlayer1::APlayer1()
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraArm->SetupAttachment(RootComponent);
 	CameraArm->SetRelativeLocation(FVector(0, 0, 70));
-	CameraArm->TargetArmLength = 400;
+	CameraArm->TargetArmLength = 430;
 	CameraArm->bUsePawnControlRotation = true;
 
 	//// 카메라 랙 설정
@@ -79,13 +81,37 @@ void APlayer1::BeginPlay()
 			subsystem->AddMappingContext(imc_Player, 0);
 		}
 	}
+
+	// 카메라 줌아웃 설정
+	InitialArmLength = 300.0f; // 초기 더 줌인된 상태로 설정
+	TargetArmLength = 430.0f;  // 원래 설정된 상태로 되돌리기 위한 목표 거리
+	ZoomDuration = 2.0f;       // 줌아웃 지속 시간 (2초)
+	ElapsedTime = 0.0f;        // 경과 시간 초기화
+
+	CameraArm->TargetArmLength = InitialArmLength;
 }
 
 // Called every frame
 void APlayer1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateCameraZoom(DeltaTime);
 }
+
+void APlayer1::UpdateCameraZoom(float DeltaTime)
+{
+	if (ElapsedTime < ZoomDuration)
+	{
+		ElapsedTime += DeltaTime;
+		float Alpha = FMath::Clamp(ElapsedTime / ZoomDuration, 0.0f, 1.0f);
+		CameraArm->TargetArmLength = FMath::Lerp(InitialArmLength, TargetArmLength, Alpha);
+	}
+	else
+	{
+		CameraArm->TargetArmLength = TargetArmLength;
+	}
+}
+
 
 // Called to bind functionality to input
 void APlayer1::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
