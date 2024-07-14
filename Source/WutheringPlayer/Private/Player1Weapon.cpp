@@ -128,8 +128,7 @@ void APlayer1Weapon::OnMyBoxBeginOverlap(UPrimitiveComponent* OverlappedComponen
 {
     if (OtherActor && OtherActor != this && OtherComp)
     {
-        ACharacter* Character = Cast<ACharacter>(OtherActor);
-        if (Character)
+        if (OtherActor->IsA(BossInstance))
         {
             //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxBeginOverlap"));
             bIsOverlapping = true;  // 충돌 변수 설정
@@ -143,8 +142,7 @@ void APlayer1Weapon::OnMyBoxEndOverlap(UPrimitiveComponent* OverlappedComponent,
 {
     if (OtherActor && OtherActor != this && OtherComp)
     {
-        ACharacter* Character = Cast<ACharacter>(OtherActor);
-        if (Character)
+        if (OtherActor->IsA(BossInstance))
         {
             //UE_LOG(LogTemp, Warning, TEXT("OnMyBoxEndOverlap"));
             bIsOverlapping = false;  // 충돌 변수 해제

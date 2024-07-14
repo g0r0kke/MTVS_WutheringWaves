@@ -44,11 +44,16 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Attack")
 	void StrongAttackStart();
 
+	//void HideWeapon();
+
 	class APlayer1Weapon* P1Weapon;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class APlayer1Skill> P1SkillFactory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class APlayer1Weapon> P1WeaponFactory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsAttack;
 };

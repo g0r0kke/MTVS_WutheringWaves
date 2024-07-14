@@ -5,6 +5,7 @@
 #include "Player1Weapon.h"
 #include "MyPlayerController.h"
 #include "Player1Skill.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFirstCharacter_1::AFirstCharacter_1()
@@ -19,7 +20,11 @@ void AFirstCharacter_1::BeginPlay()
 	Super::BeginPlay();
 
 	// 초기 체력 설정
-	Health = 1219;
+	HP = 1219;
+
+	bIsAttack = false;
+
+	//p1 = this;
 
 	FName WeaponSocket(TEXT("LeftHandSocket"));
 	P1Weapon = GetWorld()->SpawnActor<APlayer1Weapon>(P1WeaponFactory);
@@ -38,6 +43,7 @@ void AFirstCharacter_1::BeginPlay()
 	//{
 	//	P1Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 	//}
+	P1Weapon->MeshComp->SetVisibility(false);
 }
 
 // Called every frame
@@ -56,6 +62,7 @@ void AFirstCharacter_1::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
 	//Super::PerformDash(GetActorForwardVector(), 2000.0f);
@@ -86,6 +93,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	if (P1Weapon)
 	{
 		P1Weapon->WeaponAttack(EAttackType::Skill);
+		bIsAttack = true;
 	}
 	else
 	{
@@ -95,6 +103,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 
 void AFirstCharacter_1::InputAerialAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Aerial Attack!");
 	Super::bAerialAttack = true; // 공중 공격 상태 설정
 	AerialAttackStart();
@@ -112,6 +121,7 @@ void AFirstCharacter_1::InputAerialAttack()
 
 void AFirstCharacter_1::PerformStrongAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	Super::bIsStrongAttack = true;
 	//Super::DisplayMessage("P1 Strong Attack!");
 	if (P1Weapon)
@@ -127,6 +137,7 @@ void AFirstCharacter_1::PerformStrongAttack()
 
 void AFirstCharacter_1::PerformFirstAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 First Attack!");
 	//Super::PerformDash(GetActorForwardVector(), 1100.0f);
 	if (P1Weapon)
@@ -141,6 +152,7 @@ void AFirstCharacter_1::PerformFirstAttack()
 
 void AFirstCharacter_1::PerformSecondAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Second Attack!");
 	if (P1Weapon)
 	{
@@ -155,6 +167,7 @@ void AFirstCharacter_1::PerformSecondAttack()
 
 void AFirstCharacter_1::PerformThirdAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Third Attack!");
 	if (P1Weapon)
 	{
@@ -169,6 +182,7 @@ void AFirstCharacter_1::PerformThirdAttack()
 
 void AFirstCharacter_1::PerformFourthAttack()
 {
+	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Fourth Attack!");
 	if (P1Weapon)
 	{
@@ -193,3 +207,8 @@ void AFirstCharacter_1::Die()
 		PC->SwitchToCharacter(PC->BP_P2); // 캐릭터 2로 전환
 	}
 }
+
+//void AFirstCharacter_1::HideWeapon()
+//{
+//	P1Weapon->MeshComp->SetVisibility(false);
+//}
