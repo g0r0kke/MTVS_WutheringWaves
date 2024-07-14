@@ -126,7 +126,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	if (P1Weapon)
 	{
 		P1Weapon->WeaponAttack(EAttackType::Skill);
-		bIsAttack = true;
+		//bIsAttack = true;
 	}
 	else
 	{
