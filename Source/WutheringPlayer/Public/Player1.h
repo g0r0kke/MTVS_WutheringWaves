@@ -129,7 +129,6 @@ protected:
 	bool bIsAttackHeld;  // 공격 버튼이 눌린 상태인지 확인하는 변수
 	void ResetCombo();
 
-	UFUNCTION(BlueprintCallable, Category = "Moving")
 	void PerformDash(const FVector& DashDirection, float DashSpeed);
 
 	virtual void InputSkill(const struct FInputActionValue& InputValue);
