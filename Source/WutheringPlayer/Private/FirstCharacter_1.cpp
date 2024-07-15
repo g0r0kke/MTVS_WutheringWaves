@@ -22,7 +22,7 @@ void AFirstCharacter_1::BeginPlay()
 
 	// 초기 체력 설정
 	// 1219
-	HP = 100;
+	HP = 1219;
 
 	bIsAttack = false;
 
@@ -99,7 +99,7 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Skill Attack!");
 	SkillStart();
-	//Super::PerformDash(GetActorForwardVector(), 2000.0f);
+	Super::PerformDash(GetActorForwardVector(), 2000.0f);
 
 	// 스킬 액터 스폰
 	FActorSpawnParameters SpawnParams;
@@ -176,7 +176,7 @@ void AFirstCharacter_1::PerformFirstAttack()
 	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 First Attack!");
-	//Super::PerformDash(GetActorForwardVector(), 1100.0f);
+	Super::PerformDash(GetActorForwardVector(), 1100.0f);
 	if (P1Weapon)
 	{
 		P1Weapon->WeaponAttack(EAttackType::Attack1);
@@ -200,7 +200,7 @@ void AFirstCharacter_1::PerformSecondAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
 	}
-	//Super::PerformDash(GetActorForwardVector(), 1200.0f);
+	Super::PerformDash(GetActorForwardVector(), 1200.0f);
 }
 
 void AFirstCharacter_1::PerformThirdAttack()
@@ -216,7 +216,7 @@ void AFirstCharacter_1::PerformThirdAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
 	}
-	//Super::PerformDash(GetActorForwardVector(), 1300.0f);
+	Super::PerformDash(GetActorForwardVector(), 1300.0f);
 }
 
 void AFirstCharacter_1::PerformFourthAttack()
@@ -232,7 +232,7 @@ void AFirstCharacter_1::PerformFourthAttack()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
 	}
-	//Super::PerformDash(GetActorForwardVector(), 1400.0f);
+	Super::PerformDash(GetActorForwardVector(), 1400.0f);
 }
 
 void AFirstCharacter_1::Die()
