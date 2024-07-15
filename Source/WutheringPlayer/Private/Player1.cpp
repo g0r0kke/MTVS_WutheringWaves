@@ -187,14 +187,14 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
 			DashDirection = FTransform(GetControlRotation()).TransformVector(direction).GetSafeNormal();
 			// 플레이어가 이동 중인 방향으로 대쉬
 			PerformDash(DashDirection, DashSpeed); // 로컬 좌표계에서 앞으로 대쉬
-			DisplayMessage("Dash");
+			//DisplayMessage("Dash");
 			DashStart();
 		}
 		else
 		{
 			// 플레이어가 이동 중이 아니면 뒤로 대쉬
 			PerformDash(GetActorForwardVector(), -DashSpeed); // 로컬 좌표계에서 뒤로 대쉬
-			DisplayMessage("Avoid");
+			//DisplayMessage("Avoid");
 			JustAvoidStart();
 		}
 
@@ -229,8 +229,8 @@ void APlayer1::ResetDash()
 
 void APlayer1::PerformRoll(bool bForward)
 {
-	FString RollType = bForward ? TEXT("ROLL1") : TEXT("ROLL2");
-	DisplayMessage(RollType);
+	//FString RollType = bForward ? TEXT("ROLL1") : TEXT("ROLL2");
+	//DisplayMessage(RollType);
 }
 
 // 메시지 화면에 출력
@@ -336,7 +336,7 @@ void APlayer1::InputAttackStop(const struct FInputActionValue& InputValue)
 
 void APlayer1::InputAerialAttack()
 {
-	DisplayMessage("Aerial Attack!");
+	//DisplayMessage("Aerial Attack!");
 	bAerialAttack = true; // 공중 공격 상태 설정
 	const float FastFallSpeed = -1200.0f; // 빠른 낙하 속도 조정
 	LaunchCharacter(FVector(0, 0, FastFallSpeed), true, true); // 빠르게 낙하
@@ -347,7 +347,7 @@ void APlayer1::PerformStrongAttack()
 	if (bIsAttackHeld) // 공격 버튼이 눌린 상태에서만 강한 공격 실행
 	{
 		bIsStrongAttack = true;
-		DisplayMessage("Strong Attack!");
+		//DisplayMessage("Strong Attack!");
 	}
 }
 
@@ -358,27 +358,27 @@ void APlayer1::ResetCombo()
 
 void APlayer1::InputSkill(const struct FInputActionValue& InputValue)
 {
-	DisplayMessage("Skill Attack!");
+	//DisplayMessage("Skill Attack!");
 }
 
 void APlayer1::PerformFirstAttack()
 {
-	DisplayMessage("First Attack!");
+	//DisplayMessage("First Attack!");
 }
 
 void APlayer1::PerformSecondAttack()
 {
-	DisplayMessage("Second Attack!");
+	//DisplayMessage("Second Attack!");
 }
 
 void APlayer1::PerformThirdAttack()
 {
-	DisplayMessage("Third Attack!");
+	//DisplayMessage("Third Attack!");
 }
 
 void APlayer1::PerformFourthAttack()
 {
-	DisplayMessage("Fourth Attack!");
+	//DisplayMessage("Fourth Attack!");
 }
 
 void APlayer1::MoveComplete()
