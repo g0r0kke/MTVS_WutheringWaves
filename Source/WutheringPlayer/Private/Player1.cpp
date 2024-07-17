@@ -9,6 +9,7 @@
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayer1::APlayer1()
@@ -168,6 +169,7 @@ void APlayer1::Move(const struct FInputActionValue& InputValue)
 void APlayer1::InputJump(const struct FInputActionValue& InputValue)
 {
 	Jump();
+	UGameplayStatics::PlaySound2D(GetWorld(), JumpSound, 2.0f);
 	IsJumping = true;
 }
 
@@ -179,7 +181,7 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
 		//HideWeapon();
 
 		IsDashing = true;
-		float DashSpeed = 2000.0f; // 속도값 조정
+		float DashSpeed = 2500.0f; // 속도값 조정
 
 		if (IsMoving)
 		{
