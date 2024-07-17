@@ -181,7 +181,7 @@ void APlayer1::InputDash(const struct FInputActionValue& InputValue) // 대쉬 �
 		//HideWeapon();
 
 		IsDashing = true;
-		float DashSpeed = 2000.0f; // 속도값 조정
+		float DashSpeed = 2500.0f; // 속도값 조정
 
 		if (IsMoving)
 		{
