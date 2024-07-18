@@ -39,7 +39,10 @@ public:
 	class USpringArmComponent* CameraArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera)
 	class UCameraComponent* FollowCamera;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	class USoundBase* JumpSound;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* imc_Player;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
