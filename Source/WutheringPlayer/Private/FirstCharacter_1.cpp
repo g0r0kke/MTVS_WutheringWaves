@@ -22,7 +22,7 @@ void AFirstCharacter_1::BeginPlay()
 
 	// 초기 체력 설정
 	// 1219
-	HP = 1219;
+	HP = 4364;
 
 	bIsAttack = false;
 
