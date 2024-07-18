@@ -53,7 +53,7 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 	if (AttackType == EAttackType::SkillDmg)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("skill attack"));
-		P1Attack(10);
+		P1Attack(13);
 		// 플레이어->보스 이벤트 전달 안 됨
 	}
 	// 충돌 변수 == true라면 attacktype 검사
@@ -63,29 +63,29 @@ void APlayer1Weapon::WeaponAttack(EAttackType AttackType)
 		switch (AttackType)
 		{
 		case EAttackType::Attack1:
-			P1Attack(75);
+			P1Attack(40);
 			break;
 		case EAttackType::Attack2:
-			P1Attack(75);
+			P1Attack(51);
 			break;
 		case EAttackType::Attack3:
-			P1Attack(75);
+			P1Attack(36);
+			P1Attack(36);
 			break;
 		case EAttackType::Attack4:
-			P1Attack(75);
+			P1Attack(85);
 			break;
 		case EAttackType::StrongAttack:
-			P1Attack(90);
+			P1Attack(77);
 			break;
 		case EAttackType::AerialAttack:
-			P1Attack(80);
+			P1Attack(87);
 			//if (GEngine)
 			//{
 			//    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 AerialAttack"));
 			//}
 			break;
 		case EAttackType::Skill:
-			//P1Attack(75);
 			//if (GEngine)
 			//{
 			//    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("P1 Skill-Sword"));
