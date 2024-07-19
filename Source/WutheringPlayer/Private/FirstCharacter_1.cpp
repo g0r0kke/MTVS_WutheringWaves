@@ -7,6 +7,7 @@
 #include "Player1Skill.h"
 #include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h" // TActorIterator 사용을 위해 추가
+#include "TimerManager.h"
 
 // Sets default values
 AFirstCharacter_1::AFirstCharacter_1()
@@ -95,6 +96,12 @@ void AFirstCharacter_1::RotateTowardsClosestBoss()
 
 void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 {
+	if (bIsSkillOnCooldown)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Skill is on cooldown!"));
+		return; // 스킬이 쿨타임 중이면 스킬을 사용하지 않음
+	}
+
 	RotateTowardsClosestBoss();
 	P1Weapon->MeshComp->SetVisibility(true);
 	//Super::DisplayMessage("P1 Skill Attack!");
@@ -133,6 +140,16 @@ void AFirstCharacter_1::InputSkill(const struct FInputActionValue& inputValue)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("P1Weapon is not set"));
 	}
+
+	bIsSkillOnCooldown = true; // 스킬이 쿨타임 중임을 표시
+	GetWorldTimerManager().SetTimer(SkillCooldownTimerHandle, this, &AFirstCharacter_1::ResetSkillCooldown, 6.0f, false); // 6초 후 쿨타임 리셋
+}
+
+// 쿨타임 리셋 함수
+void AFirstCharacter_1::ResetSkillCooldown()
+{
+	bIsSkillOnCooldown = false; // 쿨타임 해제
+	UE_LOG(LogTemp, Log, TEXT("Skill cooldown reset!"));
 }
 
 void AFirstCharacter_1::InputAerialAttack()
@@ -238,7 +255,7 @@ void AFirstCharacter_1::PerformFourthAttack()
 void AFirstCharacter_1::Die()
 {
 	// 사망 메시지 표시
-	DisplayMessage(TEXT("P1 Died!"), 5.0f);
+	//DisplayMessage(TEXT("P1 Died!"), 5.0f);
 	P1Death();
 	//// 캐릭터 1이 죽었음을 설정
 	//AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
