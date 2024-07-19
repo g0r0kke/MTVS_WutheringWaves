@@ -287,8 +287,8 @@ void APlayer1::InputAttackStart(const struct FInputActionValue& InputValue)
 		return;
 	}
 
-	// 1.5초 후에 강한 공격 트리거
-	GetWorldTimerManager().SetTimer(StrongAttackTimer, this, &APlayer1::PerformStrongAttack, 1.5f, false);
+	// 0.5초 후에 강한 공격 트리거
+	GetWorldTimerManager().SetTimer(StrongAttackTimer, this, &APlayer1::PerformStrongAttack, 0.5f, false);
 
 }
 
@@ -404,7 +404,7 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
 
 void APlayer1::OnHitEvent(int32 Damage)
 {
-	DisplayMessage("Damaged!!!!!");
+	UE_LOG(LogTemp, Warning, TEXT("Player damage received!"));
 	HP--;
 	if (!bIsAlive)
 	{
