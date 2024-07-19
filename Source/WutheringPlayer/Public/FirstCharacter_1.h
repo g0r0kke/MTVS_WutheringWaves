@@ -67,4 +67,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss")
 	TSubclassOf<class ACharacter> BossFactory;
+
+	bool bIsSkillOnCooldown; // 스킬이 쿨타임 중인지 여부
+	FTimerHandle SkillCooldownTimerHandle; // 쿨타임 타이머 핸들
+
+	void ResetSkillCooldown(); // 쿨타임 리셋 함수
 };
