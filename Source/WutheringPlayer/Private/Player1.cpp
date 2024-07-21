@@ -393,8 +393,9 @@ void APlayer1::PerformDash(const FVector& DashDirection, float DashSpeed)
 	UCharacterMovementComponent* CharMovement = GetCharacterMovement();
 	if (CharMovement)
 	{
+		FVector NormalizedDashDirection = DashDirection.GetSafeNormal();
 		CharMovement->BrakingFrictionFactor = 0.f;
-		LaunchCharacter(DashDirection * DashSpeed, true, true);
+		LaunchCharacter(NormalizedDashDirection * DashSpeed, true, true);
 		CharMovement->BrakingFrictionFactor = 2.f;
 
 		FTimerHandle UnusedHandle;
