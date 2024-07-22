@@ -86,7 +86,7 @@ void APlayer1::BeginPlay()
 	// 카메라 줌아웃 설정
 	InitialArmLength = 300.0f; // 초기 더 줌인된 상태로 설정
 	TargetArmLength = 430.0f;  // 원래 설정된 상태로 되돌리기 위한 목표 거리
-	ZoomDuration = 2.0f;       // 줌아웃 지속 시간 (2초)
+	ZoomDuration = 1.5f;       // 줌아웃 지속 시간 (1.5초)
 	ElapsedTime = 0.0f;        // 경과 시간 초기화
 
 	CameraArm->TargetArmLength = InitialArmLength;
